@@ -19,5 +19,6 @@ Pre-requisites:
 7. Open minecraft with the mod installed, and join wynncraft. Find the nearest trade market and open it.
 8. Create a macro to click at roughly 2.2CPS, and hover over the down arrow. Let this run until there are no more items.
 9. Once there are no items left, navigate to http://localhost:8080/items. This will save all the items currently stored in items.json, located wherever the jar is.
+10. You can now stop the server and close minecraft, as the process is complete. Currently, the server must be restarted whenever you wish to read items again, but minecraft can remain running
 
 Enjoy
