@@ -2,8 +2,7 @@
 
 ## Explanation
 
-WynnMarket is a THING I MADE. It consists of a client (the forge mod) and server (the spring boot server). The mod fetches information, formats it to JSON and sends it
-to the server, which then formats it further, matches it with items in the database and saves to a file. This will be expanded in the future.
+WynnMarket is a THING I MADE. It consists of a client (the forge mod) and server (the spring boot server). The mod fetches information from the wynncraft in game market, formats it to JSON and sends it to the server, which then formats it further, matches it with items in the database and saves to a file. This will be expanded in the future.
 
 ## Setup
 Pre-requisites:
