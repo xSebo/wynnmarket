@@ -1,4 +1,8 @@
 /forge-1.12.2-14.23.5.2859-mdk/build
+
 .idea
 /wynnmarketserver/.idea
 /forge-1.12.2-14.23.5.2859-mdk/.idea
+
+/wynnmarketserver/allItems.json
+/wynnmarketserver/items.json
