@@ -2,6 +2,8 @@ package com.sebo.wynnmarketserver.web.restControllers;
 
 import com.sebo.wynnmarketserver.objects.Item;
 import com.sebo.wynnmarketserver.objects.ItemArray;
+import com.sebo.wynnmarketserver.utils.AutoClicker;
+import com.sebo.wynnmarketserver.utils.MultithreadVariables;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,9 +17,41 @@ import java.io.UnsupportedEncodingException;
 
 @RestController
 public class ItemReceiver {
+    int secondPage = 0;
+    Thread clickerThread = new Thread(new AutoClicker());
     @PostMapping("/items")
     public void receiveItems(HttpEntity<String> httpEntity) {
-        System.out.println("Page received");
+        if(secondPage == 1){
+            clickerThread.start();
+        }
+        else{
+            System.out.println("Working...");
+        }
+        secondPage++;
+        JSONObject oT = null;
+        try {
+            oT = new JSONArray(httpEntity.getBody()).getJSONObject(0);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+        String bannedJson = "{\"stats\":{},\"price\":\"0\",\"name\":\"\",\"rarity\":\"null\"}";
+        //System.out.println(oT.toString() + "\n" + bannedJson);
+        if(oT.toString().equalsIgnoreCase(bannedJson)){
+            MultithreadVariables.clickMouse.getAndSet(false);
+            System.out.println("Final page received, updating items");
+            writeItems();
+            secondPage = 0;
+            /*
+            try {
+                Thread.sleep(500);
+                MultithreadVariables.clickMouse.getAndSet(true);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+             */
+
+        }
         JSONArray o = null;
         try {
             o = new JSONArray(httpEntity.getBody());
@@ -29,9 +63,7 @@ public class ItemReceiver {
             throw new RuntimeException(e);
         }
     }
-
-    @GetMapping("/items")
-    public String testPage() {
+    public String writeItems() {
         try {
             ItemArray.writeItems();
         } catch (FileNotFoundException e) {

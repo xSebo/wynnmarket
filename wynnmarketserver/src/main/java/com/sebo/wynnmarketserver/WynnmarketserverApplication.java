@@ -10,11 +10,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @SpringBootApplication
 public class WynnmarketserverApplication {
-
 	public static void main(String[] args) {
+		System.setProperty("java.awt.headless", "false");
 		AllItemArray.updateLocal();
 		if(AllItemArray.allItems.size() == 0){
 			System.out.println("No stored items, updating from Wynncraft");
