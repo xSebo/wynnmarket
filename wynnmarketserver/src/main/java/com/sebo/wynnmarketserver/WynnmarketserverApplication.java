@@ -15,18 +15,13 @@ import java.io.IOException;
 public class WynnmarketserverApplication {
 
 	public static void main(String[] args) {
-		JSONParser parser = new JSONParser();
-		try {
-			JSONArray a = (JSONArray) parser.parse(new FileReader("allItems.json"));
-			for(Object o:a){
-				String[] categoryType = {(String) ((JSONObject)o).get("category"),(String) ((JSONObject)o).get("type")};
-				AllItemArray.addItem((String) ((JSONObject)o).get("name"), categoryType);
-			}
-			System.out.println(AllItemArray.allItems.size());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} catch (ParseException e) {
-			throw new RuntimeException(e);
+		AllItemArray.updateLocal();
+		if(AllItemArray.allItems.size() == 0){
+			System.out.println("No stored items, updating from Wynncraft");
+			System.out.println(AllItemArray.updateAll());
+		}
+		else{
+			System.out.println("HashMap updated with "+AllItemArray.allItems.size()+" items");
 		}
 		SpringApplication.run(WynnmarketserverApplication.class, args);
 	}
