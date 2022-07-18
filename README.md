@@ -11,13 +11,14 @@ Pre-requisites:
 
 1. Clone the repository
 2. Run gradle build within the forge directory.
-3. Run gradle build within the server directory.
+3. Run gradle bootJar within the server directory.
 4. Place the jar from 1.12.2-forge-14.23.5.2859/build/libs in your forge mods folder, located in .minecraft.
 5. Run the server with 'java -jar "wynnmarketserver-0.0.1-SNAPSHOT.jar"'. This jar is located in the wynnmarketserver/build/libs directory.
-6. Once the server is running, navigate to http://localhost:8080/getItems, and then restart the server. This does not need to be done again.
-7. Open minecraft with the mod installed, and join wynncraft. Find the nearest trade market and open it.
-8. Create a macro to click at roughly 2.2CPS (The timings for this are Click down, wait 138ms, Click up wait 138ms), and hover over the down arrow. Let this run until there are no more items.
-9. Once there are no items left, navigate to http://localhost:8080/items. This will save all the items currently stored in items.json, located wherever the jar is.
-10. You can now stop the server and close minecraft, as the process is complete. Currently, the server must be restarted whenever you wish to read items again, but minecraft can remain running.
+- Note: When running the server for the first time, it will take a little longer to start as the local item database needs to build.
+
+6. Open minecraft with the mod installed, and join wynncraft. Find the nearest trade market and open it.
+7. Create a macro to click at roughly 2.2CPS (The timings for this are Click down, wait 138ms, Click up, wait 138ms), and hover over the down arrow. Let this run until there are no more items.
+8. Once there are no items left, navigate to http://localhost:8080/items. This will save all the items currently stored in items.json, located wherever the jar is.
+9. You can now stop the server and close minecraft, as the process is complete. Currently, the server must be restarted whenever you wish to read items again, but minecraft can remain running.
 
 Enjoy
