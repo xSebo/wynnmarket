@@ -16,9 +16,8 @@ Pre-requisites:
 5. Run the server with 'java -jar "wynnmarketserver-0.0.1-SNAPSHOT.jar"'. This jar is located in the wynnmarketserver/build/libs directory.
 - Note: When running the server for the first time, it will take a little longer to start as the local item database needs to build.
 
-6. Open minecraft with the mod installed, and join wynncraft. Find the nearest trade market and open it.
-7. Create a macro to click at roughly 2.2CPS (The timings for this are Click down, wait 138ms, Click up, wait 138ms), and hover over the down arrow. Let this run until there are no more items.
-8. Once there are no items left, navigate to http://localhost:8080/items. This will save all the items currently stored in items.json, located wherever the jar is.
+6. Open minecraft with the mod installed, and join wynncraft.
+7. Open the auction house, click next page once and then do not move your mouse. Once all pages have been scrolled through, the mouse will stop clicking.
 9. You can now stop the server and close minecraft, as the process is complete. Currently, the server must be restarted whenever you wish to read items again, but minecraft can remain running.
 
 Enjoy
