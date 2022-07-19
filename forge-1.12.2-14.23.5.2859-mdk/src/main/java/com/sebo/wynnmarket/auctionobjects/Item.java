@@ -115,7 +115,12 @@ public class Item {
                 key.equalsIgnoreCase("spellCostPct1") ||
                 key.equalsIgnoreCase("spellCostPct2") ||
                 key.equalsIgnoreCase("spellCostPct3") ||
-                key.equalsIgnoreCase("spellCostPct4")) {
+                key.equalsIgnoreCase("spellCostPct4") ||
+                key.equalsIgnoreCase("spellCostRaw1") ||
+                key.equalsIgnoreCase("spellCostRaw2") ||
+                key.equalsIgnoreCase("spellCostRaw3") ||
+                key.equalsIgnoreCase("spellCostRaw4")
+        ) {
 
             String tempString = String.valueOf(bonusSkillPoints);
             bonusSkillPoints = Integer.valueOf(tempString.substring(0, tempString.length() - 1));

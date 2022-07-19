@@ -8,9 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -22,9 +20,8 @@ public class ItemReceiver {
     @PostMapping("/items")
     public void receiveItems(HttpEntity<String> httpEntity) {
         if(secondPage == 1){
+            ItemArray.clear();
             clickerThread.start();
-        }
-        else{
             System.out.println("Working...");
         }
         secondPage++;
@@ -41,16 +38,7 @@ public class ItemReceiver {
             System.out.println("Final page received, updating items");
             writeItems();
             secondPage = 0;
-            /*
-            try {
-                Thread.sleep(500);
-                MultithreadVariables.clickMouse.getAndSet(true);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-
-             */
-
+            return;
         }
         JSONArray o = null;
         try {
@@ -72,7 +60,13 @@ public class ItemReceiver {
             throw new RuntimeException(e);
         }
         System.out.println(ItemArray.getItems().size() + " items written");
-        ItemArray.clear();
+        //ItemArray.clear();
         return "File written";
+    }
+
+    @GetMapping("/items/{stat}")
+    @ResponseBody
+    public String sortBy(@PathVariable String stat){
+        return ItemArray.asJson(ItemArray.sortBy(stat));
     }
 }

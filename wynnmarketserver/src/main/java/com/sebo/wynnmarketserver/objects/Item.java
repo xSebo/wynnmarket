@@ -8,10 +8,36 @@ import java.util.HashMap;
 
 public class Item {
     private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getRarity() {
+        return rarity;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
     private String rarity;
 
     private String category;
     private String type;
+
+    public HashMap<String, Double> getStats() {
+        return stats;
+    }
+
     private HashMap<String, Double> stats;
     private String rawJson;
 
@@ -42,7 +68,18 @@ public class Item {
                 new Gson().toJson(stats) + "}"; // {"statName":value}
 
 
+
     }
+
+    public double getStat(String stat){
+        if(this.stats.get(stat) == null){
+            return 0;
+        }
+        else{
+            return this.stats.get(stat);
+        }
+    }
+
     @Override
     public String toString() {
         final String[] finalString = {name + "\n"};
@@ -51,4 +88,6 @@ public class Item {
         });
         return finalString[0];
     }
+
+
 }

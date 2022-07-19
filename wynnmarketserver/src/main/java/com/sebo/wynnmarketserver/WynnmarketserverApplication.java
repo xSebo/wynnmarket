@@ -1,6 +1,7 @@
 package com.sebo.wynnmarketserver;
 
 import com.sebo.wynnmarketserver.objects.AllItemArray;
+import com.sebo.wynnmarketserver.objects.ItemArray;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,8 +23,10 @@ public class WynnmarketserverApplication {
 			System.out.println(AllItemArray.updateAll());
 		}
 		else{
-			System.out.println("HashMap updated with "+AllItemArray.allItems.size()+" items");
+			System.out.println("HashMap for all items updated with "+AllItemArray.allItems.size()+" items");
 		}
+
+		System.out.println(ItemArray.updateLocal());
 		SpringApplication.run(WynnmarketserverApplication.class, args);
 	}
 
