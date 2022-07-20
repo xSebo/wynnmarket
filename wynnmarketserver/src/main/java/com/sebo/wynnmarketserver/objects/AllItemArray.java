@@ -9,17 +9,23 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class AllItemArray {
@@ -32,30 +38,21 @@ public class AllItemArray {
                     put("Dexterity", "dexterityPoints");
                     put("Intelligence", "intelligencePoints");
                     put("Agility", "agilityPoints");
-                    put("Defence", "defensePoints");
-                    put("Main Attack Damage", "damageBonusRaw");
-                    put("✤ Main Attack Damage", "damageBonus");
-                    put("✤ Spell Damage", "spellBonusRaw");
+                    put("Defense", "defensePoints");
+                    put("Main Attack Damage", "damageBonus");
+                    put(".+\\s+Main Attack Damage", "damageBonusRaw");
+                    put(".+\\s+Spell Damage", "spellBonusRaw");
                     put("Spell Damage", "spellBonus");
-                    /*
                     put("Health Regen", "healthRegenRaw");
-                    put("Health Regen", "healthRegen");
-                     */
                     put("Health", "healthBonus");
                     put("Poison", "poison");
                     put("Life Steal", "lifeSteal");
                     put("Mana Regen", "manaRegen");
                     put("Mana Steal", "manaSteal");
-                    /*
-                    put("1st Spell Cost", "spellCostPct1");
                     put("1st Spell Cost", "spellCostRaw1");
-                    put("2nd Spell Cost", "spellCostPct2");
                     put("2nd Spell Cost", "spellCostRaw2");
-                    put("3rd Spell Cost", "spellCostPct3");
                     put("3rd Spell Cost", "spellCostRaw3");
-                    put("4th Spell Cost", "spellCostPct4");
                     put("4th Spell Cost", "spellCostRaw4");
-                     */
                     put("Thorns", "thorns");
                     put("Reflection", "reflection");
                     put("Attack Speed", "attackSpeedBonus");
@@ -71,16 +68,16 @@ public class AllItemArray {
                     put("Stealing", "emeraldStealing");
                     put("Gather XP Bonus", "gatherXpBonus");
                     put("Gather Speed", "gatherSpeed");
-                    put("Earth Damage", "bonusEarthDamage");
-                    put("Fire Damage", "bonusFireDamage");
-                    put("Water Damage", "bonusWaterDamage");
-                    put("Air Damage", "bonusAirDamage");
-                    put("Thunder Damage", "bonusThunderDamage");
-                    put("Earth Defence", "bonusEarthDefense");
-                    put("Fire Defence", "bonusFireDefense");
-                    put("Water Defence", "bonusWaterDefense");
-                    put("Air Defence", "bonusAirDefense");
-                    put("Thunder Defence", "bonusThunderDefense");
+                    put(".+\\s+Earth Damage", "bonusEarthDamage");
+                    put(".+\\s+Fire Damage", "bonusFireDamage");
+                    put(".+\\s+Water Damage", "bonusWaterDamage");
+                    put(".+\\s+Air Damage", "bonusAirDamage");
+                    put(".+\\s+Thunder Damage", "bonusThunderDamage");
+                    put(".+\\s+Earth Defense", "bonusEarthDefense");
+                    put(".+\\s+Fire Defense", "bonusFireDefense");
+                    put(".+\\s+Water Defense", "bonusWaterDefense");
+                    put(".+\\s+Air Defense", "bonusAirDefense");
+                    put(".+\\s+Thunder Defense", "bonusThunderDefense");
                 }
             };
     public static HashMap<String, String[]> allItems = new HashMap<>();
@@ -89,25 +86,26 @@ public class AllItemArray {
         allItems.put(name, categoryType);
     }
 
-    public static String updateLocal(){
-        String carInfoJson= null;
+    public static String updateLocal() {
+        String itemInfoJson = null;
         try {
-            carInfoJson = new String(Files.readAllBytes(Paths.get("allItems.json")));
+            itemInfoJson = new String(Files.readAllBytes(Paths.get("allItems.json")));
         } catch (IOException e) {
             return "Error reading file";
         }
         Gson gson = new Gson();
-        Item[] allItems = gson.fromJson(carInfoJson, Item[].class);
+        Item[] allItems = gson.fromJson(itemInfoJson, Item[].class);
         for (Item item : allItems) {
-            String[] categoryType = {item.getCategory(),item.getType()};
+            String[] categoryType = {item.getCategory(), item.getType()};
             AllItemArray.addItem(item.getName(), categoryType);
         }
         return "HashMap Updated";
     }
-    private static String genJsonToSave(JSONObject o,String nameType, String typeType) throws JSONException {
+
+    private static String genJsonToSave(JSONObject o, String nameType, String typeType) throws JSONException {
         String newJson = "{\"name\":\"";
-        newJson+=o.getString(nameType) +
-                    "\",\"category\":\"" + o.getString("category") + "\",\"type\":\"" + o.getString(typeType) + "\"}";
+        newJson += o.getString(nameType) +
+                "\",\"category\":\"" + o.getString("category") + "\",\"type\":\"" + o.getString(typeType) + "\"}";
         return newJson;
     }
 
@@ -124,7 +122,7 @@ public class AllItemArray {
             for (int i = 0; i < alphabet.length(); i++) {
                 switch (i) {
                     case 0:
-                        System.out.println("Starting DB update");
+                        System.out.println("Starting DB update stage 1");
                         break;
                     case 7:
                         System.out.println("25% complete");
@@ -135,7 +133,7 @@ public class AllItemArray {
                     case 20:
                         System.out.println("75% complete");
                         break;
-                    case 26:
+                    case 25:
                         System.out.println("100% complete");
                         break;
                 }
@@ -159,18 +157,18 @@ public class AllItemArray {
                         JSONObject o = json.getJSONObject(j);
                         String newJson = "{\"name\":\"\",\"category\":\"\",\"type\":\"\"}";
                         try {
-                            newJson = genJsonToSave(o,"displayName","type");
+                            newJson = genJsonToSave(o, "displayName", "type");
                         } catch (JSONException e) {
                             try {
                                 if (e.getMessage().equalsIgnoreCase("JSONObject[\"displayName\"] not found.")) {
-                                    newJson = genJsonToSave(o,"name","type");
+                                    newJson = genJsonToSave(o, "name", "type");
                                 }
                             } catch (JSONException e1) {
                                 try {
-                                    newJson = genJsonToSave(o,"displayName","accessoryType");
-                                    } catch (JSONException e2) {
+                                    newJson = genJsonToSave(o, "displayName", "accessoryType");
+                                } catch (JSONException e2) {
                                     try {
-                                        newJson = genJsonToSave(o,"name","accessoryType");
+                                        newJson = genJsonToSave(o, "name", "accessoryType");
 
                                     } catch (JSONException ex) {
                                         System.out.println(o);
@@ -178,81 +176,179 @@ public class AllItemArray {
                                 }
 
                             }
-                            //System.out.println(newJson);
-
                         }
                         hashSet.add(newJson);
                     }
 
-                    } else{
-                        System.out.println("Failed : HTTP error code : " + responseCode);
-                    }
-                }
-                String[] jOA = hashSet.toArray(new String[hashSet.size()]);
-                for (int i = 0; i < hashSet.size(); i++) {
-                    writer.println(jOA[i].toString());
-                    if (i != hashSet.size() - 1) {
-                        writer.println(",");
-                    }
-                }
-                writer.println("]");
-                writer.close();
-                System.out.println("Done\n");
-                return "DB Updated";
-            }catch(Exception e){
-                e.printStackTrace();
-                return "DB Update Failed";
-            }
-        }
-        public static String updateAll () {
-            String stored = updateStored();
-            String local = updateLocal();
-            if (local.equals("HashMap Updated") && stored.equals("DB Updated")) {
-                return "HashMap and DB for all items updated with " + allItems.size() + " items";
-            }
-            if (local.equals("IOException")) {
-                updateLocal();
-                return "HashMap and DB for all items updated with " + allItems.size() + " items";
-            }
-
-            System.out.println(local);
-            System.out.println(stored);
-            return "Update failed";
-        }
-
-
-        public static String getMinValues (String itemName){
-            try {
-                String postDataRaw = "search=&name=" + itemName + "&category=all&tier=any&profession=any&min=1&max=130&order1=level&order2=null&order3=null&order4=null";
-                byte[] postDataEncoded = postDataRaw.getBytes("UTF-8");
-                int dataLength = postDataEncoded.length;
-
-                URL url = new URL("https://www.wynndata.tk/items/");
-                HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                con.setDoOutput(true);
-                con.setRequestProperty("charset", "utf-8");
-                con.setRequestProperty("Content-Length", String.valueOf(dataLength));
-                try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {
-                    wr.write(postDataEncoded);
-                }
-
-                int responseCode = con.getResponseCode();
-                if (responseCode == HttpURLConnection.HTTP_OK) {
-                    System.out.println("Success");
-                    String strResult = new BufferedReader(new InputStreamReader(con.getInputStream()))
-                            .lines().collect(Collectors.joining("\n"));
-                    Document doc = Jsoup.parse(strResult);
-                    Elements td3 = doc.select("[class=td3]").select("tbody").select("tr").select("td");//.select("[class=positive], [class=negative]");
-                    return td3.text();
                 } else {
-                    System.out.println("Failed: " + responseCode);
-                    return "Failed: " + responseCode;
+                    System.out.println("Failed : HTTP error code : " + responseCode);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                return "Error";
             }
+
+            String[] hashSetArray = hashSet.toArray(new String[hashSet.size()]);
+            ArrayList<String> stats = new ArrayList();
+            Executor executor = Executors.newFixedThreadPool(200);
+
+            int totalSize = hashSet.size();
+            for(int i = 0; i< totalSize;) {
+                System.out.println(i+"/" + totalSize);
+                CompletionService<String> completionService =
+                        new ExecutorCompletionService<>(executor);
+
+                for (int j = 0; j < 100; j++, i++) {
+                    int finalI = i;
+                    completionService.submit(() -> getMinMaxValues(hashSetArray[finalI]));
+                }
+                int received = 0;
+                boolean errors = false;
+                while (received < 100 && !errors) {
+                    Future<String> resultFuture = completionService.take();
+                    try {
+                        String result = resultFuture.get();
+                        received++;
+                        stats.add(result);
+                    } catch (Exception e) {
+                        System.out.println("Error getting result");
+                        errors = true;
+                    }
+                }
+            }
+
+            for (int i = 0; i < stats.size(); i++) {
+                writer.println(stats.get(i));
+                if (i != stats.size() - 1) {
+                    writer.println(",");
+                }
+            }
+            writer.println("]");
+            writer.close();
+            System.out.println("Done\n");
+            return "DB Updated";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "DB Update Failed";
         }
     }
+
+    public static String updateAll() {
+        String stored = updateStored();
+        String local = updateLocal();
+        if (local.equals("HashMap Updated") && stored.equals("DB Updated")) {
+            return "HashMap and DB for all items updated with " + allItems.size() + " items";
+        }
+        if (local.equals("IOException")) {
+            updateLocal();
+            return "HashMap and DB for all items updated with " + allItems.size() + " items";
+        }
+
+        System.out.println(local);
+        System.out.println(stored);
+        return "Update failed";
+    }
+
+    public static String getMinMaxValues(String JSONToBuild) {
+        try {
+            String itemName = new JSONObject(JSONToBuild).getString("name");
+            itemName = URLEncoder.encode(itemName, StandardCharsets.UTF_8);
+            URL url = new URL("https://www.wynndata.tk/i/" + itemName);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
+            int responseCode = con.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                String strResult = new BufferedReader(new InputStreamReader(con.getInputStream()))
+                        .lines().collect(Collectors.joining("\n"));
+
+                Document doc = Jsoup.parse(strResult);
+                Elements statHtml = doc.select("[class=td3]").select("tbody").select("tr").select("td");
+                ArrayList<String> statNamesList = new ArrayList<>();
+                ArrayList<String> statValuesList = new ArrayList<>();
+                int miniCount = 0;
+                for (Element e : statHtml) {
+                    if (miniCount == 1) {
+                        statNamesList.add(e.text());
+                        miniCount = -1;
+                    } else {
+                        statValuesList.add(e.text());
+                        miniCount++;
+                    }
+                }
+                int statLength = statNamesList.size();
+                for (int i = 0; i < statLength; i++) {
+                    int finalI = i;
+                    final boolean[] isChanged = {false};
+                    regexes.forEach((k, v) -> {
+                        {
+                            if (statNamesList.get(finalI).matches(k)) {
+                                statNamesList.set(finalI, v);
+                                isChanged[0] = true;
+                                return;
+                            }
+                        }
+                    });
+                    if (!isChanged[0]) {
+                        continue;
+                    }
+                }
+                HashMap<String, Double[]> stats = new HashMap<>();
+
+                for (int i = 0; i < statValuesList.size(); i += 2) {
+                    Double[] tempStats = new Double[2];
+                    boolean hasPercentage = statValuesList.get(i).contains("%");
+                    String statMin = (statValuesList.get(i).replaceAll("[^0-9\\-]", ""));
+                    String statMax = (statValuesList.get(i + 1).replaceAll("[^0-9\\-]", ""));
+                    String statName = statNamesList.get(i / 2);
+
+                    if (statName.contains("spellCostRaw") && hasPercentage) {
+                        char lastChar = statMin.charAt(statMin.length() - 1);
+                        statName = "spellCostPct" + lastChar;
+                    }
+                    if (statName.equalsIgnoreCase("healthRegenRaw") && hasPercentage) {
+                        statName = "healthRegen";
+                    }
+                    if (statName.equalsIgnoreCase("poison") ||
+                            statName.equalsIgnoreCase("lifeSteal") ||
+                            statName.equalsIgnoreCase("manaRegen") ||
+                            statName.equalsIgnoreCase("manaSteal")) {
+
+                        try {
+                            tempStats[0] = Double.valueOf(statMin.substring(0, statMin.length() - 1));
+                        } catch (Exception e) {
+                            tempStats[0] = null;
+                        }
+                        try {
+                            tempStats[1] = Double.valueOf(statMax.substring(0, statMax.length() - 1));
+                        } catch (Exception e) {
+                            tempStats[1] = null;
+                        }
+                    } else {
+                        try {
+                            tempStats[0] = Double.valueOf(statMin);
+                        } catch (NumberFormatException e) {
+                            tempStats[0] = null;
+                        }
+                        try {
+                            tempStats[1] = Double.valueOf(statMax);
+                        } catch (NumberFormatException e) {
+                            tempStats[1] = null;
+                        }
+                    }
+                    stats.put(statName, tempStats.clone());
+                }
+                String json = JSONToBuild;
+                String name = new JSONObject(json).getString("name");
+                json = json.substring(0, json.length() - 1);
+                json += ",\"stats\":";
+                json += new JSONObject(stats) + "}";
+                return json;
+
+            } else {
+                System.out.println("Failed: " + responseCode);
+                return "Failed";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed";
+        }
+    }
+}

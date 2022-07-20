@@ -70,10 +70,4 @@ public class ItemReceiver {
     public String sortBy(@PathVariable String stat){
         return ItemArray.asJson(ItemArray.sortBy(stat));
     }
-
-    @GetMapping("/testRoute/{itemName}")
-    @ResponseBody
-    public String findLowerVal(@PathVariable String itemName){
-        return AllItemArray.getMinValues(itemName);
-    }
 }

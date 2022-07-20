@@ -18,11 +18,11 @@ public class AuctionItem extends Item{
 
     private String rarity;
 
-    public HashMap<String, Double> getStats() {
-        return stats;
+    public HashMap<String, Double> getRealStats() {
+        return realStats;
     }
 
-    private HashMap<String, Double> stats;
+    private HashMap<String, Double> realStats;
     private String rawJson;
 
     private int price;
@@ -45,7 +45,7 @@ public class AuctionItem extends Item{
             category = "Unknown";
             type = "Unknown";
         }
-        stats = new Gson().fromJson(o.getString("stats"), HashMap.class);
+        realStats = new Gson().fromJson(o.getString("stats"), HashMap.class);
 
         rawJson = "{\"name\":\""+name+
                 "\",\"rarity\":\""+rarity+
@@ -53,25 +53,25 @@ public class AuctionItem extends Item{
                 "\",\"category\":\""+category+
                 "\",\"type\":\""+type+
                 "\",\"stats\":" +
-                new Gson().toJson(stats) + "}"; // {"statName":value}
+                new Gson().toJson(realStats) + "}"; // {"statName":value}
     }
     public AuctionItem(JSONObject o, boolean dbItem){
 
     }
 
     public double getStat(String stat){
-        if(this.stats.get(stat) == null){
+        if(this.realStats.get(stat) == null){
             return 0;
         }
         else{
-            return this.stats.get(stat);
+            return this.realStats.get(stat);
         }
     }
 
     @Override
     public String toString() {
         final String[] finalString = {name + "\n"};
-        stats.forEach((k, v) -> {
+        realStats.forEach((k, v) -> {
             finalString[0] += k + ": " + v + "\n";
         });
         return finalString[0];

@@ -73,7 +73,7 @@ public class ItemArray {
         ArrayList<AuctionItem> sorted = new ArrayList<>();
         for(AuctionItem i: auctionItems){
 
-            if(i.getStats().get(stat) == null || i.getRarity().equals("null") || i.getRarity().equals("Crafted")
+            if(i.getRealStats().get(stat) == null || i.getRarity().equals("null") || i.getRarity().equals("Crafted")
             || i.getName().contains("Unidentified")){
                 continue;
             }else{
@@ -88,12 +88,12 @@ public class ItemArray {
                     double stat2 = 0;
 
                     try {
-                        stat1 = o1.getStats().get(stat);
+                        stat1 = o1.getRealStats().get(stat);
                     }catch(NullPointerException e){
 
                     }
                     try {
-                        stat2 = o2.getStats().get(stat);
+                        stat2 = o2.getRealStats().get(stat);
                     }catch (NullPointerException e){
 
                     }

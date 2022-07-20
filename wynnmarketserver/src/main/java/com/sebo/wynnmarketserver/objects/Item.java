@@ -1,5 +1,7 @@
 package com.sebo.wynnmarketserver.objects;
 
+import java.util.HashMap;
+
 public class Item {
     public String getName() {
         return name;
@@ -18,4 +20,6 @@ public class Item {
     protected String category;
 
     protected String type;
+
+    protected HashMap<String,Double[]> stats;
 }
