@@ -1,6 +1,7 @@
 package com.sebo.wynnmarketserver.web.restControllers;
 
-import com.sebo.wynnmarketserver.objects.Item;
+import com.sebo.wynnmarketserver.objects.AllItemArray;
+import com.sebo.wynnmarketserver.objects.AuctionItem;
 import com.sebo.wynnmarketserver.objects.ItemArray;
 import com.sebo.wynnmarketserver.utils.AutoClicker;
 import com.sebo.wynnmarketserver.utils.MultithreadVariables;
@@ -44,7 +45,7 @@ public class ItemReceiver {
         try {
             o = new JSONArray(httpEntity.getBody());
             for (int i = 0; i < o.length(); i++) {
-                ItemArray.add(new Item(o.getJSONObject(i)));
+                ItemArray.add(new AuctionItem(o.getJSONObject(i)));
 
             }
         } catch (JSONException e) {
@@ -68,5 +69,11 @@ public class ItemReceiver {
     @ResponseBody
     public String sortBy(@PathVariable String stat){
         return ItemArray.asJson(ItemArray.sortBy(stat));
+    }
+
+    @GetMapping("/testRoute/{itemName}")
+    @ResponseBody
+    public String findLowerVal(@PathVariable String itemName){
+        return AllItemArray.getMinValues(itemName);
     }
 }

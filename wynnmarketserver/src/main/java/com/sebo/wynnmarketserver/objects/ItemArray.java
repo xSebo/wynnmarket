@@ -12,19 +12,19 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class ItemArray {
-    private static ArrayList<Item> items = new ArrayList<>();
+    private static ArrayList<AuctionItem> auctionItems = new ArrayList<>();
 
     public static void writeItems() throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter("items.json", "UTF-8");
         writer.print("");
         writer.println("[");
-        for (int i= 0; i < items.size(); i++) {
+        for (int i = 0; i < auctionItems.size(); i++) {
             String bannedJson = "{\"name\":\"\",\"rarity\":\"null\",\"price\":\"0\",\"category\":\"Unknown\",\"type\":\"Unknown\",\"stats\":{}}";
-            if(items.get(i).getRawJson().equals(bannedJson)){
+            if(auctionItems.get(i).getRawJson().equals(bannedJson)){
                 continue;
             }
-            writer.println(items.get(i).getRawJson());
-            if(i!=items.size()-1) {
+            writer.println(auctionItems.get(i).getRawJson());
+            if(i!= auctionItems.size()-1) {
                 writer.println(",");
             }
         }
@@ -32,12 +32,12 @@ public class ItemArray {
         writer.close();
     }
 
-    public static ArrayList<Item> getItems() {
-        return items;
+    public static ArrayList<AuctionItem> getItems() {
+        return auctionItems;
     }
 
     public static void clear(){
-        items.clear();
+        auctionItems.clear();
         try {
             PrintWriter writer = new PrintWriter("items.json", "UTF-8");
             writer.print("");
@@ -49,8 +49,8 @@ public class ItemArray {
         }
     }
 
-    public static void add(Item i){
-        items.add(i);
+    public static void add(AuctionItem i){
+        auctionItems.add(i);
     }
 
     public static String updateLocal() {
@@ -58,9 +58,9 @@ public class ItemArray {
             String wholeFile = new String(Files.readAllBytes(Paths.get("items.json")), StandardCharsets.UTF_8);
             JSONArray a = new JSONArray(wholeFile);
             for(int i = 0; i < a.length(); i++){
-                ItemArray.add(new Item(a.getJSONObject(i)));
+                ItemArray.add(new AuctionItem(a.getJSONObject(i)));
             }
-            return "HashMap for auction items updated with "+ItemArray.items.size()+" items";
+            return "HashMap for auction items updated with "+ItemArray.auctionItems.size()+" items";
         } catch (IOException e) {
             return "No pre-existing items found";
         } catch (JSONException e) {
@@ -69,9 +69,9 @@ public class ItemArray {
         }
     }
 
-    public static ArrayList<Item> sortBy(String stat){
-        ArrayList<Item> sorted = new ArrayList<>();
-        for(Item i:items){
+    public static ArrayList<AuctionItem> sortBy(String stat){
+        ArrayList<AuctionItem> sorted = new ArrayList<>();
+        for(AuctionItem i: auctionItems){
 
             if(i.getStats().get(stat) == null || i.getRarity().equals("null") || i.getRarity().equals("Crafted")
             || i.getName().contains("Unidentified")){
@@ -81,9 +81,9 @@ public class ItemArray {
             }
         }
         try {
-            Collections.sort(sorted, new Comparator<Item>() {
+            Collections.sort(sorted, new Comparator<AuctionItem>() {
                 @Override
-                public int compare(Item o1, Item o2) {
+                public int compare(AuctionItem o1, AuctionItem o2) {
                     double stat1 = 0;
                     double stat2 = 0;
 
@@ -119,17 +119,17 @@ public class ItemArray {
     }
 
     public static String asJson(){
-        return genJson(items);
+        return genJson(auctionItems);
     }
-    public static String asJson(ArrayList<Item> tempItems){
-        return genJson(tempItems);
+    public static String asJson(ArrayList<AuctionItem> tempAuctionItems){
+        return genJson(tempAuctionItems);
     }
 
-    private static String genJson(ArrayList<Item> tempItems) {
+    private static String genJson(ArrayList<AuctionItem> tempAuctionItems) {
         String json = "[";
-        for(int i = 0; i < tempItems.size(); i++){
-            json += tempItems.get(i).getRawJson();
-            if(i!=tempItems.size()-1){
+        for(int i = 0; i < tempAuctionItems.size(); i++){
+            json += tempAuctionItems.get(i).getRawJson();
+            if(i!= tempAuctionItems.size()-1){
                 json += ",";
             }
         }

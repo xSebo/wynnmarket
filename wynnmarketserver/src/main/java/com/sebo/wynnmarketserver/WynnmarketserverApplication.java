@@ -17,12 +17,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class WynnmarketserverApplication {
 	public static void main(String[] args) {
 		System.setProperty("java.awt.headless", "false");
-		AllItemArray.updateLocal();
-		if(AllItemArray.allItems.size() == 0){
+		if(AllItemArray.updateLocal().equalsIgnoreCase("Error reading file")){
 			System.out.println("No stored items, updating from Wynncraft");
 			System.out.println(AllItemArray.updateAll());
 		}
 		else{
+			AllItemArray.updateLocal();
 			System.out.println("HashMap for all items updated with "+AllItemArray.allItems.size()+" items");
 		}
 
