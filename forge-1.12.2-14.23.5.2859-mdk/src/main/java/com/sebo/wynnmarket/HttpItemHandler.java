@@ -31,7 +31,7 @@ public class HttpItemHandler extends Thread{
         finalJson+="]";
         URL url = null;
         try {
-            url = new URL("https://www.wynndata.tk/items/");
+            url = new URL("http://localhost:8080/items");
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("POST");
             con.setRequestProperty("Content-Type", "application/json");

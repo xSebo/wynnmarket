@@ -89,7 +89,7 @@ public class Item {
         return rarity;
     }
 
-    public HashMap<String, Integer> getStats() {
+    public HashMap<String, Double[]> getStats() {
         return stats;
     }
 
@@ -102,7 +102,7 @@ public class Item {
         return price;
     }
 
-    private HashMap<String, Integer> stats = new HashMap<>();
+    private HashMap<String, Double[]> stats = new HashMap<>();
 
     private void formatBonusPoints(String loreLine, String key, int bonusSkillPoints) {
         if (String.valueOf(loreLine.charAt(0)).equalsIgnoreCase("-")) {
@@ -126,7 +126,8 @@ public class Item {
             bonusSkillPoints = Integer.valueOf(tempString.substring(0, tempString.length() - 1));
 
         }
-        stats.put(key, bonusSkillPoints);
+        Double[] doubleVal = {null, Double.valueOf(bonusSkillPoints)};
+        stats.put(key, doubleVal);
         //System.out.println("FROM HASHMAP: "+key+ ": " + stats.get(key) + " FOR: " + name);
     }
 

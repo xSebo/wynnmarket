@@ -80,10 +80,10 @@ public class AllItemArray {
                     put(".+\\s+Thunder Defense", "bonusThunderDefense");
                 }
             };
-    public static HashMap<String, String[]> allItems = new HashMap<>();
+    public static HashMap<String, Item> allItems = new HashMap<>();
 
-    public static void addItem(String name, String[] categoryType) {
-        allItems.put(name, categoryType);
+    public static void addItem(String name, Item item) {
+        allItems.put(name, item);
     }
 
     public static String updateLocal() {
@@ -96,8 +96,7 @@ public class AllItemArray {
         Gson gson = new Gson();
         Item[] allItems = gson.fromJson(itemInfoJson, Item[].class);
         for (Item item : allItems) {
-            String[] categoryType = {item.getCategory(), item.getType()};
-            AllItemArray.addItem(item.getName(), categoryType);
+            AllItemArray.addItem(item.getName(), item);
         }
         return "HashMap Updated";
     }
@@ -187,11 +186,11 @@ public class AllItemArray {
 
             String[] hashSetArray = hashSet.toArray(new String[hashSet.size()]);
             ArrayList<String> stats = new ArrayList();
-            Executor executor = Executors.newFixedThreadPool(200);
+            Executor executor = Executors.newFixedThreadPool(100);
 
             int totalSize = hashSet.size();
-            for(int i = 0; i< totalSize;) {
-                System.out.println(i+"/" + totalSize);
+            for (int i = 0; i < totalSize; ) {
+                System.out.println(i + "/" + totalSize);
                 CompletionService<String> completionService =
                         new ExecutorCompletionService<>(executor);
 
@@ -208,8 +207,6 @@ public class AllItemArray {
                         received++;
                         stats.add(result);
                     } catch (Exception e) {
-                        System.out.println("Error getting result");
-                        errors = true;
                     }
                 }
             }
@@ -260,18 +257,37 @@ public class AllItemArray {
                         .lines().collect(Collectors.joining("\n"));
 
                 Document doc = Jsoup.parse(strResult);
+                boolean singleStat = false;
                 Elements statHtml = doc.select("[class=td3]").select("tbody").select("tr").select("td");
+                if(statHtml.size() == 0) {
+                    singleStat = true;
+                    statHtml = doc.select("[class=td2]").select("tbody").select("tr").select("td");
+                }
                 ArrayList<String> statNamesList = new ArrayList<>();
                 ArrayList<String> statValuesList = new ArrayList<>();
-                int miniCount = 0;
-                for (Element e : statHtml) {
-                    if (miniCount == 1) {
-                        statNamesList.add(e.text());
-                        miniCount = -1;
-                    } else {
-                        statValuesList.add(e.text());
-                        miniCount++;
+                if (!singleStat) {
+                    int miniCount = 0;
+                    for (Element e : statHtml) {
+                        if (miniCount == 1) {
+                            statNamesList.add(e.text());
+                            miniCount = -1;
+                        } else {
+                            statValuesList.add(e.text());
+                            miniCount++;
+                        }
                     }
+                } else {
+                    boolean isStat = false;
+                    for (Element e : statHtml) {
+                        if (isStat) {
+                            statValuesList.add(e.text());
+                            isStat = false;
+                        } else {
+                            statNamesList.add(e.text());
+                            isStat = true;
+                        }
+                    }
+
                 }
                 int statLength = statNamesList.size();
                 for (int i = 0; i < statLength; i++) {
@@ -292,12 +308,23 @@ public class AllItemArray {
                 }
                 HashMap<String, Double[]> stats = new HashMap<>();
 
-                for (int i = 0; i < statValuesList.size(); i += 2) {
+                int i = 0;
+                while(i<statValuesList.size()) {
                     Double[] tempStats = new Double[2];
                     boolean hasPercentage = statValuesList.get(i).contains("%");
                     String statMin = (statValuesList.get(i).replaceAll("[^0-9\\-]", ""));
-                    String statMax = (statValuesList.get(i + 1).replaceAll("[^0-9\\-]", ""));
-                    String statName = statNamesList.get(i / 2);
+                    String statMax = "";
+                    if (!singleStat) {
+                        statMax = (statValuesList.get(i + 1).replaceAll("[^0-9\\-]", ""));
+                    }
+                    String statName;
+                    if(singleStat) {
+                        statName = statNamesList.get(i);
+                        //System.out.println(statName +", "+ statMin);
+                    }
+                    else {
+                        statName = statNamesList.get(i/2);
+                    }
 
                     if (statName.contains("spellCostRaw") && hasPercentage) {
                         char lastChar = statMin.charAt(statMin.length() - 1);
@@ -316,9 +343,13 @@ public class AllItemArray {
                         } catch (Exception e) {
                             tempStats[0] = null;
                         }
-                        try {
-                            tempStats[1] = Double.valueOf(statMax.substring(0, statMax.length() - 1));
-                        } catch (Exception e) {
+                        if (!singleStat) {
+                            try {
+                                tempStats[1] = Double.valueOf(statMax.substring(0, statMax.length() - 1));
+                            } catch (Exception e) {
+                                tempStats[1] = null;
+                            }
+                        }else{
                             tempStats[1] = null;
                         }
                     } else {
@@ -327,13 +358,27 @@ public class AllItemArray {
                         } catch (NumberFormatException e) {
                             tempStats[0] = null;
                         }
-                        try {
-                            tempStats[1] = Double.valueOf(statMax);
-                        } catch (NumberFormatException e) {
+                        if (!singleStat) {
+                            try {
+                                tempStats[1] = Double.valueOf(statMax);
+                            } catch (NumberFormatException e) {
+                                tempStats[1] = null;
+                            }
+                        }else{
                             tempStats[1] = null;
                         }
                     }
+                    if(singleStat){
+                        Double swap = tempStats[0];
+                        tempStats[0] = null;
+                        tempStats[1] = swap;
+                    }
                     stats.put(statName, tempStats.clone());
+                    if(singleStat){
+                        i++;
+                    }else{
+                        i = i+2;
+                    }
                 }
                 String json = JSONToBuild;
                 String name = new JSONObject(json).getString("name");

@@ -46,7 +46,6 @@ public class ItemReceiver {
             o = new JSONArray(httpEntity.getBody());
             for (int i = 0; i < o.length(); i++) {
                 ItemArray.add(new AuctionItem(o.getJSONObject(i)));
-
             }
         } catch (JSONException e) {
             throw new RuntimeException(e);

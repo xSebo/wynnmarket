@@ -18,11 +18,6 @@ public class AuctionItem extends Item{
 
     private String rarity;
 
-    public HashMap<String, Double> getRealStats() {
-        return realStats;
-    }
-
-    private HashMap<String, Double> realStats;
     private String rawJson;
 
     private int price;
@@ -31,21 +26,17 @@ public class AuctionItem extends Item{
         return rawJson;
     }
     public AuctionItem(JSONObject o) throws JSONException {
-        try{
-            name = o.get("displayName").toString();
-        }catch(JSONException e){
-            name = o.get("name").toString();
-        }
+        name = o.get("name").toString();
         rarity = (String) o.get("rarity");
         price = Integer.valueOf(o.get("price").toString());
         try {
-            category = (String) AllItemArray.allItems.get(name)[0];
-            type = (String) AllItemArray.allItems.get(name)[1];
+            category = AllItemArray.allItems.get(name).getCategory();
+            type = AllItemArray.allItems.get(name).getType();
         }catch (Exception e){
             category = "Unknown";
             type = "Unknown";
         }
-        realStats = new Gson().fromJson(o.getString("stats"), HashMap.class);
+        stats = new Gson().fromJson(o.getString("stats"), HashMap.class);
 
         rawJson = "{\"name\":\""+name+
                 "\",\"rarity\":\""+rarity+
@@ -53,28 +44,12 @@ public class AuctionItem extends Item{
                 "\",\"category\":\""+category+
                 "\",\"type\":\""+type+
                 "\",\"stats\":" +
-                new Gson().toJson(realStats) + "}"; // {"statName":value}
-    }
-    public AuctionItem(JSONObject o, boolean dbItem){
-
-    }
-
-    public double getStat(String stat){
-        if(this.realStats.get(stat) == null){
-            return 0;
-        }
-        else{
-            return this.realStats.get(stat);
-        }
+                new Gson().toJson(stats) + "}"; // {"statName":value}
     }
 
     @Override
     public String toString() {
-        final String[] finalString = {name + "\n"};
-        realStats.forEach((k, v) -> {
-            finalString[0] += k + ": " + v + "\n";
-        });
-        return finalString[0];
+        return super.toString() + "\n" + price + " emeralds";
     }
 
 
