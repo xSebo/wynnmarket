@@ -18,13 +18,20 @@ public class AuctionItem extends Item{
 
     private String rarity;
 
-    private String rawJson;
 
     private int price;
 
-    public String getRawJson() {
+    public String genRawJson() {
+        String rawJson = "{\"name\":\""+name+
+                "\",\"rarity\":\""+rarity+
+                "\",\"price\":\""+price+
+                "\",\"category\":\""+category+
+                "\",\"type\":\""+type+
+                "\",\"stats\":" +
+                new Gson().toJson(stats) + "}"; // {"statName":value}
         return rawJson;
     }
+
     public AuctionItem(JSONObject o) throws JSONException {
         name = o.get("name").toString();
         rarity = (String) o.get("rarity");
@@ -37,20 +44,6 @@ public class AuctionItem extends Item{
             type = "Unknown";
         }
         stats = new Gson().fromJson(o.getString("stats"), HashMap.class);
-
-        rawJson = "{\"name\":\""+name+
-                "\",\"rarity\":\""+rarity+
-                "\",\"price\":\""+price+
-                "\",\"category\":\""+category+
-                "\",\"type\":\""+type+
-                "\",\"stats\":" +
-                new Gson().toJson(stats) + "}"; // {"statName":value}
     }
-
-    @Override
-    public String toString() {
-        return super.toString() + "\n" + price + " emeralds";
-    }
-
 
 }

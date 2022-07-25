@@ -186,27 +186,30 @@ public class AllItemArray {
 
             String[] hashSetArray = hashSet.toArray(new String[hashSet.size()]);
             ArrayList<String> stats = new ArrayList();
-            Executor executor = Executors.newFixedThreadPool(100);
+            int threads = 200;
+            Executor executor = Executors.newFixedThreadPool(threads);
+            CompletionService<String> completionService =
+                    new ExecutorCompletionService<>(executor);
 
             int totalSize = hashSet.size();
             for (int i = 0; i < totalSize; ) {
                 System.out.println(i + "/" + totalSize);
-                CompletionService<String> completionService =
-                        new ExecutorCompletionService<>(executor);
 
-                for (int j = 0; j < 100; j++, i++) {
+
+                for (int j = 0; j < threads; j++, i++) {
                     int finalI = i;
                     completionService.submit(() -> getMinMaxValues(hashSetArray[finalI]));
                 }
                 int received = 0;
                 boolean errors = false;
-                while (received < 100 && !errors) {
+                while (received < threads && !errors) {
                     Future<String> resultFuture = completionService.take();
                     try {
                         String result = resultFuture.get();
                         received++;
                         stats.add(result);
                     } catch (Exception e) {
+                        break;
                     }
                 }
             }
@@ -287,7 +290,6 @@ public class AllItemArray {
                             isStat = true;
                         }
                     }
-
                 }
                 int statLength = statNamesList.size();
                 for (int i = 0; i < statLength; i++) {

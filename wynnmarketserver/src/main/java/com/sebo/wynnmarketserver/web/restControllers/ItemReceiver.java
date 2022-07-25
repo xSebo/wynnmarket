@@ -9,10 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 @RestController
 public class ItemReceiver {
@@ -38,6 +40,7 @@ public class ItemReceiver {
             MultithreadVariables.clickMouse.getAndSet(false);
             System.out.println("Final page received, updating items");
             writeItems();
+            ItemArray.updateLocal();
             secondPage = 0;
             return;
         }
@@ -64,9 +67,9 @@ public class ItemReceiver {
         return "File written";
     }
 
-    @GetMapping("/items/{stat}")
+    @GetMapping("/items/{stat}/{category}/{type}")
     @ResponseBody
-    public String sortBy(@PathVariable String stat){
-        return ItemArray.asJson(ItemArray.sortBy(stat));
+    public ResponseEntity<List<AuctionItem>> sortBy(@PathVariable String stat, @PathVariable String category, @PathVariable String type){
+        return ResponseEntity.ok(ItemArray.sortBy(stat, category, type));
     }
 }

@@ -1,7 +1,13 @@
 package com.sebo.wynnmarketserver.objects;
 
-import java.util.HashMap;
+import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+@Getter
 public class Item {
     public String getName() {
         return name;
@@ -21,27 +27,19 @@ public class Item {
 
     protected String type;
 
-    protected HashMap<String,Double[]> stats;
+    protected HashMap<String,ArrayList<Double>> stats;
 
-    public Double[] getStat(String stat){
-        if(this.stats.get(stat) == null){
-            return new Double[]{null, null};
-        }
-        else{
+    public ArrayList<Double> getStat(String stat){
+        try{
+            this.stats.get(stat).get(0);
             return this.stats.get(stat);
         }
+        catch(NullPointerException e){
+            return new ArrayList<>(Arrays.asList(null,null));
+        }
     }
 
-    @Override
-    public String toString() {
-        final String[] finalString = {name + "\n"};
-        stats.forEach((k, v) -> {
-            finalString[0] += k + ": " + v + "\n";
-        });
-        return finalString[0];
-    }
-
-    public HashMap<String, Double[]> getStats() {
+    public HashMap<String, ArrayList<Double>> getStats() {
         return stats;
     }
 }

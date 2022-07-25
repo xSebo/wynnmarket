@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+<link rel="stylesheet" href="/css/index.css">
+<script src="/js/index.js"></script>
+
+<head>
+    <meta charset="UTF-8">
+    <title>[[${title}]]</title>
+</head>
+<body>
+<div id="mainPage">
+    <div id="searchBar">
+        <input id="searchBarInput" class="input" type="text" placeholder="Statistic name">
+
+        <div class="dropdown" onClick="toggleDropDown(this)">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                    <span>Category</span>
+                    <span class="icon">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="categoryDropdown" role="menu">
+                <div class="dropdown-content">
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Any
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Weapon
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Armour
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Accessory
+                    </a>
+
+                </div>
+            </div>
+        </div>
+        <div class="dropdown" onClick="toggleDropDown(this)">
+            <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu3">
+                    <span>Type</span>
+                    <span class="icon">
+                        <i class="fa-solid fa-arrow-down"></i>
+                    </span>
+                </button>
+            </div>
+            <div class="dropdown-menu" id="typeDropdown" role="menu">
+                <div class="dropdown-content">
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Any
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Helmet
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Chestplate
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Leggings
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Boots
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Dagger
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Bow
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Spear
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Wand
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Relik
+                    </a>
+                    <hr class="dropdown-divider">
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Ring
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Necklace
+                    </a>
+                    <a class="dropdown-item" onclick="toggleSelected(this)">
+                        Bracelet
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <button id="searchBarButton" class="button is-primary" onClick="statRedirect()">Search</button>
+    </div>
+    <pre id="jsonDisplay"></pre>
+</div>
+</body>
+</html>
