@@ -5,6 +5,9 @@ import com.sebo.wynnmarketserver.objects.ItemArray;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 @SpringBootApplication
 public class WynnmarketserverApplication {
 
@@ -21,6 +24,7 @@ public class WynnmarketserverApplication {
 		}
 
 		System.out.println(ItemArray.updateLocal());
+		ItemArray.sortBy("null",new ArrayList<>(Arrays.asList("null")), "null", "null", true, false);
 		SpringApplication.run(WynnmarketserverApplication.class, args);
 	}
 
