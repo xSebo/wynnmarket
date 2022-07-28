@@ -1,20 +1,26 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.1'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.springframework.boot' version '2.7.2'
+	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
 	id 'java'
+	id "org.joinfaces" version "4.7.2"
 }
 
-group = 'com.sebo'
+group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '11'
 
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	implementation "org.joinfaces:jsf-spring-boot-starter"
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0'
+//	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.7.0'
+
+	implementation 'org.joinfaces:joinfaces-dependencies:4.7.0.1'
+	implementation 'org.joinfaces:primefaces-spring-boot-starter:4.7.2'
+
 	implementation 'org.json:json:20090211'
 	implementation 'com.google.code.gson:gson:2.8.5'
 	implementation 'org.projectlombok:lombok:1.18.20'

@@ -2,20 +2,14 @@ package com.sebo.wynnmarketserver;
 
 import com.sebo.wynnmarketserver.objects.AllItemArray;
 import com.sebo.wynnmarketserver.objects.ItemArray;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 @SpringBootApplication
 public class WynnmarketserverApplication {
+
 	public static void main(String[] args) {
+		System.out.println(Runtime.version().toString());
 		System.setProperty("java.awt.headless", "false");
 		if(AllItemArray.updateLocal().equalsIgnoreCase("Error reading file")){
 			System.out.println("No stored items, updating from Wynncraft");
