@@ -15,10 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,9 +35,6 @@ public class Item {
                     put("\\d%+\\s+Main Attack Damage", "damageBonus");
                     put("\\d+\\s+Neutral Spell Damage", "spellBonusRaw");
                     put("\\d%+\\s+Spell Damage", "spellBonus");
-                    put("\\d+\\s+Health Regen", "healthRegen");
-                    put("\\d%+\\s+Health Regen", "healthRegenRaw");
-                    put("\\d+\\s+Health", "healthBonus");
                     put("\\/3s Poison", "poison");
                     put("\\/3s Life Steal", "lifeSteal");
                     put("\\/5s Mana Regen", "manaRegen");
@@ -56,11 +50,9 @@ public class Item {
                     put("\\d%+\\s+Thorns", "thorns");
                     put("\\d%+\\s+Reflection", "reflection");
                     put("\\d+\\s+tier Attack Speed", "attackSpeedBonus");
-                    put("\\d%+\\s+Speed", "speed");
+                    put("\\d%+\\s+Walk Speed", "speed");
                     put("\\d%+\\s+Exploding", "exploding");
                     put("\\d%+\\s+Soul Point Regen", "soulPoints");
-                    put("\\d%+\\s+Sprint", "sprint");
-                    put("\\d%+\\s+Sprint Regen", "sprintRegen");
                     put("\\d+\\s+Jump Height", "jumpHeight");
                     put("\\d%+\\s+XP Bonus", "xpBonus");
                     put("\\d%+\\s+Loot Bonus", "lootBonus");
@@ -131,6 +123,21 @@ public class Item {
         //System.out.println("FROM HASHMAP: "+key+ ": " + stats.get(key) + " FOR: " + name);
     }
 
+    private String genStat(String loreLine) {
+        String[] tempArray = loreLine.split(" ");
+        String healthLoreLine = "";
+        for (int j = 0; j < tempArray.length; j++) {
+            if (j != 0) {
+                healthLoreLine += tempArray[j].replaceAll("[^A-Za-z]", "");
+            }
+            if (j != tempArray.length - 1) {
+                healthLoreLine += " ";
+            }
+        }
+        healthLoreLine = healthLoreLine.substring(1);
+        return healthLoreLine;
+    }
+
     private void loreBuilder(ItemStack item) {
         NBTTagCompound nbt = item.getTagCompound();
         if (nbt != null) {
@@ -170,7 +177,7 @@ public class Item {
                             rarity = "Crafted";
                         }
 
-                        if(loreLine.equalsIgnoreCase("Price:")) {
+                        if (loreLine.equalsIgnoreCase("Price:")) {
                             String finalPrice = "";
                             String tempLoreLine = StringUtils.stripControlCodes(lore.getStringTagAt(i + 1));
                             for (int j = 0; j < tempLoreLine.length(); j++) {
@@ -188,11 +195,41 @@ public class Item {
                             continue;
                         }
                         String finalLoreLine = loreLine;
+
+                        if (genStat(finalLoreLine).equalsIgnoreCase("Sprint") ||
+                                genStat(finalLoreLine).equalsIgnoreCase("Sprint Regen")) {
+
+                            String sprintLoreLine = genStat(finalLoreLine);
+                            if (sprintLoreLine.equalsIgnoreCase("Sprint")) {
+                                formatBonusPoints(finalLoreLine, "sprint", bonusPoints);
+
+                            } else if (sprintLoreLine.equalsIgnoreCase("Sprint Regen")) {
+                                formatBonusPoints(finalLoreLine, "sprintRegen", bonusPoints);
+                            }
+                        }
+                        if (genStat(finalLoreLine).equalsIgnoreCase("Health") ||
+                                genStat(finalLoreLine).equalsIgnoreCase("Health Regen")) {
+                            String healthLoreLine = genStat(finalLoreLine);
+                            if (healthLoreLine.equalsIgnoreCase("Health")) {
+                                formatBonusPoints(finalLoreLine, "healthBonus", bonusPoints);
+                            } else if (healthLoreLine.equalsIgnoreCase("Health Regen")) {
+                                if (finalLoreLine.contains("%")) {
+                                    formatBonusPoints(finalLoreLine, "healthRegen", bonusPoints);
+                                } else {
+                                    formatBonusPoints(finalLoreLine, "healthRegenRaw", bonusPoints);
+                                }
+                            }
+                        }
+
                         regexes.forEach((k, v) -> {
                             {
                                 Pattern pattern = Pattern.compile(k);
                                 Matcher matcher = pattern.matcher(finalLoreLine);
                                 while (matcher.find()) {
+                                    if (name.equalsIgnoreCase("Ornithopter")) {
+                                        System.out.println(finalLoreLine);
+                                        System.out.println(bonusPoints);
+                                    }
                                     formatBonusPoints(finalLoreLine, v, bonusPoints);
                                 }
                             }
@@ -207,7 +244,6 @@ public class Item {
         name = StringUtils.stripControlCodes(item.getDisplayName());
         name = name.substring(0, name.length() - 1);
         loreBuilder(item);
-        //System.out.println(this);
     }
 
     @Override

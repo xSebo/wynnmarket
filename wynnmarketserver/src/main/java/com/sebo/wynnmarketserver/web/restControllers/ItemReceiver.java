@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -48,7 +51,8 @@ public class ItemReceiver {
         try {
             o = new JSONArray(httpEntity.getBody());
             for (int i = 0; i < o.length(); i++) {
-                ItemArray.add(new AuctionItem(o.getJSONObject(i)));
+                AuctionItem item = new AuctionItem(o.getJSONObject(i));
+                ItemArray.add(item);
             }
         } catch (JSONException e) {
             throw new RuntimeException(e);
@@ -67,9 +71,10 @@ public class ItemReceiver {
         return "File written";
     }
 
-    @GetMapping("/items/{stat}/{category}/{type}")
+    @GetMapping("/items/{name}/{stat}/{category}/{type}/{avgPct}")
     @ResponseBody
-    public ResponseEntity<List<AuctionItem>> sortBy(@PathVariable String stat, @PathVariable String category, @PathVariable String type){
-        return ResponseEntity.ok(ItemArray.sortBy(stat, category, type));
+    public ResponseEntity<List<AuctionItem>> sortBy(@PathVariable String name, @PathVariable String stat, @PathVariable String category, @PathVariable String type, @PathVariable String avgPct) {
+        ArrayList<String> stats = new ArrayList<>(Arrays.asList(URLDecoder.decode(stat).split(",")));
+        return ResponseEntity.ok(ItemArray.sortBy(name, stats, category, type, Boolean.valueOf(avgPct)));
     }
 }

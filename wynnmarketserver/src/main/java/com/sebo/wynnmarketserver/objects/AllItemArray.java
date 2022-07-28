@@ -261,11 +261,21 @@ public class AllItemArray {
 
                 Document doc = Jsoup.parse(strResult);
                 boolean singleStat = false;
-                Elements statHtml = doc.select("[class=td3]").select("tbody").select("tr").select("td");
+                Elements statHtml;
+                try {
+                    statHtml = doc.select("[class=td3]").first().select("tbody").select("tr").select("td");
+                }catch (Exception e){
+                    statHtml = doc.select("[class=td3]").select("tbody").select("tr").select("td");
+                }
                 if(statHtml.size() == 0) {
                     singleStat = true;
-                    statHtml = doc.select("[class=td2]").select("tbody").select("tr").select("td");
+                    try {
+                        statHtml = doc.select("[class=td2]").first().select("tbody").select("tr").select("td");
+                    }catch (Exception e){
+                        statHtml = doc.select("[class=td2]").select("tbody").select("tr").select("td");
+                    }
                 }
+
                 ArrayList<String> statNamesList = new ArrayList<>();
                 ArrayList<String> statValuesList = new ArrayList<>();
                 if (!singleStat) {
@@ -322,7 +332,6 @@ public class AllItemArray {
                     String statName;
                     if(singleStat) {
                         statName = statNamesList.get(i);
-                        //System.out.println(statName +", "+ statMin);
                     }
                     else {
                         statName = statNamesList.get(i/2);

@@ -1,15 +1,40 @@
+let isPct = false;
+
 function statRedirect() {
     document.getElementById("searchBarButton").classList.add("is-loading")
 
 
     var regex = /[^A-Za-z0-9]/g;
-    var selectedCategory = document.getElementById("categoryDropdown").querySelector(".is-active").innerText.replaceAll(regex,"").toLowerCase();
-    var selectedType = document.getElementById("typeDropdown").querySelector(".is-active").innerText.replaceAll(regex,"").toLowerCase();
+    try {
+        var selectedCategory = document.getElementById("categoryDropdown").querySelector(".is-active").innerText.replaceAll(regex, "").toLowerCase();
+    } catch (e) {
+        var selectedCategory = "any";
+    }
+    try {
+        var selectedType = document.getElementById("typeDropdown").querySelector(".is-active").innerText.replaceAll(regex, "").toLowerCase();
+    }catch (e) {
+        var selectedType = "any";
+    }
 
-    var stat = document.getElementById("searchBarInput").value;
+    if(selectedCategory == "any"){
+        selectedCategory = "null"
+    }
+    if(selectedType == "any"){
+        selectedType = "null"
+    }
+
+    var name = document.getElementById("nameInput").value;
+    var stat = document.getElementById("statInput").value;
+
+    if(name == ""){
+        name = "null"
+    }if(stat == ""){
+        stat = "null"
+    }
+    encodeURIComponent(stat)
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", '/items/' + stat + "/" + selectedCategory + "/" + selectedType, true);
+    xhttp.open("GET", '/items/'+ name + "/" + stat + "/" + selectedCategory + "/" + selectedType + "/" + isPct, true);
     xhttp.onload = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             document.getElementById("searchBarButton").classList.remove("is-loading")
@@ -36,7 +61,7 @@ function toggleSelected(el) {
     el.classList.toggle("is-active");
     var parentParent = parent.parentElement.parentElement.children[0].children[0].children[0];
     parentParent.innerHTML = el.innerHTML
-    if(el.innerText == "Weapon" || el.innerText == "Armour" || el.innerText == "Accessory" || el.innerText == "Any"){
+    if(el.innerText == "Weapon" || el.innerText == "Armour" || el.innerText == "Accessory" || (el.innerText == "Any" && el.parentElement.parentElement.id == "categoryDropdown")){
         updateTypeDropdown(el)
     }
 }
@@ -44,7 +69,7 @@ function toggleSelected(el) {
 function updateTypeDropdown(el){
     var validForWeapons = ["Dagger", "Wand", "Bow", "Spear", "Relik"]
     var validForArmour = ["Helmet", "Chestplate", "Leggings", "Boots"]
-    var validForAccessories = ["Ring", "Necklace", "Amulet"]
+    var validForAccessories = ["Ring", "Necklace", "Bracelet"]
     var itemsToUse = []
     if(el.innerText == "Weapon"){
         itemsToUse = validForWeapons
@@ -53,6 +78,7 @@ function updateTypeDropdown(el){
     }else if(el.innerText == "Accessory"){
         itemsToUse = validForAccessories
     }else{
+        itemsToUse.push("Any")
         for(var i = 0; i < validForWeapons.length; i++){
             itemsToUse.push(validForWeapons[i])
         }
@@ -82,4 +108,11 @@ function updateTypeDropdown(el){
         dropDown.appendChild(elementsToChange[i]);
     }
 
+}
+function togglePercentage(){
+    if(isPct){
+        isPct = false;
+    }else{
+        isPct = true;
+    }
 }
