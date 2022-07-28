@@ -72,7 +72,7 @@ public class ItemArray {
         }
     }
 
-    private static ArrayList<AuctionItem> sortByStats(ArrayList<AuctionItem> items,ArrayList<String> stat){
+    private static ArrayList<AuctionItem> sortByStats(ArrayList<AuctionItem> items,ArrayList<String> stat, boolean pct){
         Map<AuctionItem,ArrayList<Double>> allIndeces = new HashMap<>();
         for(String statI:stat){
             Collections.sort(items, new Comparator<>() {
@@ -82,14 +82,20 @@ public class ItemArray {
                     double stat2 = 0;
 
                     try {
-                        stat1 = o1.getStat(statI).get(1);
+                        if(!pct) {
+                            stat1 = o1.getStat(statI).get(1);
+                        }else{
+                            stat1 = o1.getStatPct(statI);
+                        }
                     } catch (NullPointerException e) {
-
                     }
                     try {
-                        stat2 = o2.getStat(statI).get(1);
+                        if(!pct) {
+                            stat2 = o2.getStat(statI).get(1);
+                        }else{
+                            stat2 = o2.getStatPct(statI);
+                        }
                     } catch (NullPointerException e) {
-
                     }
                     if (statI.equalsIgnoreCase("spellCostPct1") ||
                             statI.equalsIgnoreCase("spellCostPct2") ||
@@ -115,27 +121,32 @@ public class ItemArray {
         }
         allIndeces.forEach((k,v) -> {
             ArrayList<Double> mean = new ArrayList<>(Arrays.asList(v.stream().mapToDouble(a -> a).average().getAsDouble()));
-            allIndeces.get(k).clear();
             allIndeces.get(k).addAll(mean);
         });
 
         List<Map.Entry<AuctionItem, ArrayList<Double>>> list = new ArrayList<>(allIndeces.entrySet());
-        Collections.sort(list, Comparator.comparingDouble(o -> o.getValue().get(0)));
+        int listSize = list.get(0).getValue().size();
+        Collections.sort(list, Comparator.comparingDouble(o -> o.getValue().get(listSize-1)));
         ArrayList<AuctionItem> sorted = new ArrayList<>();
         list.forEach(o -> sorted.add(o.getKey()));
 
-        System.out.println("Sorted " + items.size() + " items by " + stat);
+        if(pct){
+            System.out.println("Sorted " + items.size() + " items by " + stat + " percentage");
+        }else {
+            System.out.println("Sorted " + items.size() + " items by " + stat);
+        }
         return sorted;
     }
 
     private static ArrayList<AuctionItem> sortByAvgPct(ArrayList<AuctionItem> items){
         Collections.sort(items, Comparator.comparingDouble(o -> o.getAvgStatPct()));
 
+
         System.out.println("Sorted " + items.size() + " items by average stat percentage");
         return items;
     }
 
-    public static ArrayList<AuctionItem> sortBy(String name, ArrayList<String> stat, String category, String type, boolean avgPct) {
+    public static ArrayList<AuctionItem> sortBy(String name, ArrayList<String> stat, String category, String type, boolean avgPct, boolean pct){
         ArrayList<AuctionItem> sorted = new ArrayList<>();
         if (category.equalsIgnoreCase("armour")) {
             category = "armor";
@@ -190,7 +201,7 @@ public class ItemArray {
         }
         try {
             if (stat.size() != 0 && !nullStat) {
-                sortByStats(sorted, stat);
+                sortByStats(sorted, stat, pct);
                 if(avgPct){
                     sortByAvgPct(sorted);
                 }

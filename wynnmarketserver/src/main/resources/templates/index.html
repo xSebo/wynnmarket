@@ -100,8 +100,12 @@
             </div>
         </div>
         <label class="checkbox">
-            <input type="checkbox" onclick="togglePercentage()">
+            <input type="checkbox" id="allPct" onclick="togglePercentage(this)">
             Sort by average percentage?
+        </label>
+        <label class="checkbox">
+            <input type="checkbox" id="statPct" onclick="togglePercentage(this)">
+            Sort by stat percentage?
         </label>
 
         <button id="searchBarButton" class="button is-primary" onClick="statRedirect()">Search</button>

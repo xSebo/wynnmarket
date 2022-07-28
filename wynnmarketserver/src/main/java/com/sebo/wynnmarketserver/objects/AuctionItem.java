@@ -1,6 +1,7 @@
 package com.sebo.wynnmarketserver.objects;
 
 import com.google.gson.Gson;
+import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +13,9 @@ public class AuctionItem extends Item{
 
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
+    public double getAvgStatPct() {
+        return avgStatPct;
+    }
 
     public String getRarity() {
         return rarity;
@@ -24,25 +28,34 @@ public class AuctionItem extends Item{
     private double generateAveragePercentage(){
         final double[] sum = {0};
         stats.forEach((k,v) -> {
-            sum[0] += generateStatPercentage(k);
+            sum[0] += getStatPct(k);
         });
         return Double.valueOf(df.format(sum[0]/stats.size()));
     }
 
-    public double getAvgStatPct() {
-        return avgStatPct;
+    private HashMap<String,Double> statPercentages = new HashMap<>();
+
+    public HashMap<String, Double> getStatPercentages() {
+        return statPercentages;
     }
+
 
     private double avgStatPct;
 
     //TODO -> Fix this, some percentages are >100%, and some are negative.
-    private double generateStatPercentage(String stat){
+    public double getStatPct(String stat){
         try{
-            double statVal = this.stats.get(stat).get(1);
-            ArrayList<Double> statBounds = AllItemArray.allItems.get(this.getName()).getStats().get(stat);
+            try{
+                return statPercentages.get(stat);
+            }catch(NullPointerException e) {
+                double statVal = this.stats.get(stat).get(1);
+                ArrayList<Double> statBounds = AllItemArray.allItems.get(this.getName()).getStats().get(stat);
 
-            double percentage = ((statVal-statBounds.get(0)) / (statBounds.get(1)-statBounds.get(0)))*100;
-            return Double.valueOf(df.format(percentage));
+                double percentage = ((statVal - statBounds.get(0)) / (statBounds.get(1) - statBounds.get(0))) * 100;
+                percentage = Double.valueOf(df.format(percentage));
+                statPercentages.put(stat,percentage);
+                return percentage;
+            }
         }
         catch(NullPointerException e){
             return 0;

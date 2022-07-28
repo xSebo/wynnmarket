@@ -1,4 +1,5 @@
-let isPct = false;
+let isAllPct = false;
+let isStatPct = false;
 
 function statRedirect() {
     document.getElementById("searchBarButton").classList.add("is-loading")
@@ -34,7 +35,7 @@ function statRedirect() {
     encodeURIComponent(stat)
 
     var xhttp = new XMLHttpRequest();
-    xhttp.open("GET", '/items/'+ name + "/" + stat + "/" + selectedCategory + "/" + selectedType + "/" + isPct, true);
+    xhttp.open("GET", '/items/'+ name + "/" + stat + "/" + selectedCategory + "/" + selectedType + "/" + isAllPct + "/" + isStatPct, true);
     xhttp.onload = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             document.getElementById("searchBarButton").classList.remove("is-loading")
@@ -109,10 +110,18 @@ function updateTypeDropdown(el){
     }
 
 }
-function togglePercentage(){
-    if(isPct){
-        isPct = false;
-    }else{
-        isPct = true;
+function togglePercentage(el){
+    if(el.id == "allPct") {
+        if (isAllPct) {
+            isAllPct = false;
+        } else {
+            isAllPct = true;
+        }
+    }if(el.id == "statPct") {
+        if (isStatPct) {
+            isStatPct = false;
+        } else {
+            isStatPct = true;
+        }
     }
 }
