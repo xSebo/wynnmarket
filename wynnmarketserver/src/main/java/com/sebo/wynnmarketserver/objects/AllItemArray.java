@@ -338,7 +338,7 @@ public class AllItemArray {
                     }
 
                     if (statName.contains("spellCostRaw") && hasPercentage) {
-                        char lastChar = statMin.charAt(statMin.length() - 1);
+                        char lastChar = statName.charAt(statName.length() - 1);
                         statName = "spellCostPct" + lastChar;
                     }
                     if (statName.equalsIgnoreCase("healthRegenRaw") && hasPercentage) {

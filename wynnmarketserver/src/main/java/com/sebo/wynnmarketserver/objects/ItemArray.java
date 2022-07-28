@@ -107,16 +107,6 @@ public class ItemArray {
                         }
                     } catch (NullPointerException e) {
                     }
-                    if (statI.equalsIgnoreCase("spellCostPct1") ||
-                            statI.equalsIgnoreCase("spellCostPct2") ||
-                            statI.equalsIgnoreCase("spellCostPct3") ||
-                            statI.equalsIgnoreCase("spellCostPct4") ||
-                            statI.equalsIgnoreCase("spellCostRaw1") ||
-                            statI.equalsIgnoreCase("spellCostRaw2") ||
-                            statI.equalsIgnoreCase("spellCostRaw3") ||
-                            statI.equalsIgnoreCase("spellCostRaw4")) {
-                        return Double.compare(stat1, stat2);
-                    }
                     return Double.compare(stat2, stat1);
                 }
             });
@@ -133,7 +123,6 @@ public class ItemArray {
             ArrayList<Double> mean = new ArrayList<>(Arrays.asList(v.stream().mapToDouble(a -> a).average().getAsDouble()));
             allIndeces.get(k).addAll(mean);
         });
-
         List<Map.Entry<AuctionItem, ArrayList<Double>>> list = new ArrayList<>(allIndeces.entrySet());
         int listSize = list.get(0).getValue().size();
         Collections.sort(list, Comparator.comparingDouble(o -> o.getValue().get(listSize-1)));
