@@ -14,6 +14,12 @@ import java.util.concurrent.*;
 public class ItemArray {
     private static ArrayList<AuctionItem> auctionItems = new ArrayList<>();
 
+    private static ArrayList<AuctionItem> lastSorted = new ArrayList<>();
+
+    public static ArrayList<AuctionItem> getLastSorted() {
+        return lastSorted;
+    }
+
     public static void writeItems() throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter("items.json", "UTF-8");
         writer.print("");
@@ -60,6 +66,10 @@ public class ItemArray {
             for (int i = 0; i < a.length(); i++) {
                 AuctionItem item = new AuctionItem(a.getJSONObject(i));
                 if(item.getStats().size() != 0){
+//TODO -> THIS THROWS AWAY DATA, NEED TO FIX
+                    if(item.getType().equalsIgnoreCase("Unknown")){
+                        continue;
+                    }
                     ItemArray.add(item);
                 }
             }
@@ -140,7 +150,7 @@ public class ItemArray {
 
     private static ArrayList<AuctionItem> sortByAvgPct(ArrayList<AuctionItem> items){
         Collections.sort(items, Comparator.comparingDouble(o -> o.getAvgStatPct()));
-
+        Collections.reverse(items);
 
         System.out.println("Sorted " + items.size() + " items by average stat percentage");
         return items;
@@ -212,6 +222,8 @@ public class ItemArray {
             System.out.println("Error sorting by " + stat);
             e.printStackTrace();
         }
+        lastSorted.clear();
+        lastSorted.addAll(sorted);
         return sorted;
     }
 

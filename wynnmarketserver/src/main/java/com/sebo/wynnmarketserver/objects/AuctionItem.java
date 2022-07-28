@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +34,7 @@ public class AuctionItem extends Item{
         return Double.valueOf(df.format(sum[0]/stats.size()));
     }
 
-    private HashMap<String,Double> statPercentages = new HashMap<>();
+    private HashMap<String,Double> statPercentages;
 
     public HashMap<String, Double> getStatPercentages() {
         return statPercentages;
@@ -50,8 +51,14 @@ public class AuctionItem extends Item{
             }catch(NullPointerException e) {
                 double statVal = this.stats.get(stat).get(1);
                 ArrayList<Double> statBounds = AllItemArray.allItems.get(this.getName()).getStats().get(stat);
+                double percentage;
+                if(statBounds.get(0) == null){
+                    percentage = Double.valueOf("100.0");
+                    statPercentages.put(stat,percentage);
+                    return percentage;
+                }
 
-                double percentage = ((statVal - statBounds.get(0)) / (statBounds.get(1) - statBounds.get(0))) * 100;
+                percentage = ((statVal - statBounds.get(0)) / (statBounds.get(1) - statBounds.get(0))) * 100;
                 percentage = Double.valueOf(df.format(percentage));
                 statPercentages.put(stat,percentage);
                 return percentage;
@@ -79,6 +86,7 @@ public class AuctionItem extends Item{
     }
 
     public AuctionItem(JSONObject o) throws JSONException {
+        statPercentages = new HashMap<>();
         name = o.get("name").toString();
         rarity = (String) o.get("rarity");
         price = Integer.valueOf(o.get("price").toString());
@@ -90,7 +98,19 @@ public class AuctionItem extends Item{
             type = "Unknown";
         }
         stats = new Gson().fromJson(o.getString("stats"), HashMap.class);
+        try{
+            stats.get("health");
+            stats.remove("health");
+        }catch (Exception e){
+            //Do nothing
+        }
         avgStatPct = generateAveragePercentage();
+        /*
+        statPercentages.forEach((k,v) -> {
+            System.out.println(k + ": " + v);
+        });
+
+         */
     }
 
 }

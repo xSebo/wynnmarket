@@ -23,8 +23,7 @@ public class DataGridView implements Serializable {
 
     @PostConstruct
     public void init() {
-        ArrayList<String> tempArray = new ArrayList<>(Arrays.asList("null"));
-        items = ItemArray.sortBy("null", tempArray, "null", "null", true, false);
+        items = ItemArray.getLastSorted();
     }
 
     public List<AuctionItem> getItems() {

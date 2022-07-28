@@ -73,13 +73,14 @@ public class ItemReceiver {
 
     @GetMapping("/items/{name}/{stat}/{category}/{type}/{avgPct}/{pct}")
     @ResponseBody
-    public ResponseEntity<List<AuctionItem>> sortBy(@PathVariable String name,
+    public String sortBy(@PathVariable String name,
                                                     @PathVariable String stat,
                                                     @PathVariable String category,
                                                     @PathVariable String type,
                                                     @PathVariable boolean avgPct,
                                                     @PathVariable boolean pct) {
         ArrayList<String> stats = new ArrayList<>(Arrays.asList(URLDecoder.decode(stat).split(",")));
-        return ResponseEntity.ok(ItemArray.sortBy(name, stats, category, type, avgPct, pct));
+        ItemArray.sortBy(name, stats, category, type, avgPct, pct);
+        return "OK";
     }
 }
