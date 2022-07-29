@@ -39,7 +39,7 @@ function statRedirect() {
     xhttp.onload = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             document.getElementById("searchBarButton").classList.remove("is-loading")
-            window.location.href = "/dataGridView.xhtml";
+            window.location.href = "/";
 
         } else {
             document.getElementById("searchBarButton").classList.remove("is-loading")
