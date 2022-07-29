@@ -28,6 +28,7 @@ public class AutoClicker implements Runnable{
 
     @Override
     public void run() {
+        MultithreadVariables.clickMouse.getAndSet(true);
         while(MultithreadVariables.clickMouse.get()){
             click();
         }

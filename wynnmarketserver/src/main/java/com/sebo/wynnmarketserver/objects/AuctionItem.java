@@ -9,6 +9,7 @@ import java.lang.reflect.Array;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class AuctionItem extends Item{
 
@@ -34,14 +35,30 @@ public class AuctionItem extends Item{
         return Double.valueOf(df.format(sum[0]/stats.size()));
     }
 
-    private HashMap<String,Double> statPercentages;
+    private transient HashMap<String,Double> statPercentages;
 
     public HashMap<String, Double> getStatPercentages() {
         return statPercentages;
     }
 
 
-    private double avgStatPct;
+    private transient double avgStatPct;
+
+    private transient static Map<String,String> rarityColour = Map.of(
+            "Mythic", "#AA00AA",
+            "Fabled", "#FF5555",
+            "Legendary", "#55FFFF",
+            "Rare", "#FF55FF",
+            "Unique", "#FFFF55",
+            "Normal","#FFFFFF"
+            );
+    ;
+
+    public String getColour() {
+        return colour;
+    }
+
+    private String colour;
 
     //TODO -> Fix this, some percentages are >100%, and some are negative.
     public double getStatPct(String stat){
@@ -56,6 +73,10 @@ public class AuctionItem extends Item{
                     percentage = Double.valueOf("100.0");
                     statPercentages.put(stat,percentage);
                     return percentage;
+                }
+                //Wynndata info wrong
+                if (name.equalsIgnoreCase("Broken Balance")) {
+                    statBounds.set(1, Double.valueOf(124));
                 }
 
                 percentage = ((statVal - statBounds.get(0)) / (statBounds.get(1) - statBounds.get(0))) * 100;
@@ -105,6 +126,7 @@ public class AuctionItem extends Item{
             //Do nothing
         }
         avgStatPct = generateAveragePercentage();
+        colour = rarityColour.get(rarity);
         /*
         statPercentages.forEach((k,v) -> {
             System.out.println(k + ": " + v);

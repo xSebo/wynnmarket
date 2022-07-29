@@ -63,6 +63,7 @@ public class ItemArray {
         try {
             String wholeFile = new String(Files.readAllBytes(Paths.get("items.json")), StandardCharsets.UTF_8);
             JSONArray a = new JSONArray(wholeFile);
+            auctionItems.clear();
             for (int i = 0; i < a.length(); i++) {
                 AuctionItem item = new AuctionItem(a.getJSONObject(i));
                 if(item.getStats().size() != 0){
@@ -73,7 +74,8 @@ public class ItemArray {
                     ItemArray.add(item);
                 }
             }
-            return "HashMap for auction items updated with " + ItemArray.auctionItems.size() + " items";
+            ItemArray.sortBy("null",new ArrayList<>(Arrays.asList("null")), "null", "null", true, false);
+            return "HashMap for auction items updated with " + auctionItems.size() + " items";
         } catch (IOException e) {
             return "No pre-existing items found";
         } catch (JSONException e) {

@@ -24,7 +24,6 @@ public class WynnmarketserverApplication {
 		}
 
 		System.out.println(ItemArray.updateLocal());
-		ItemArray.sortBy("null",new ArrayList<>(Arrays.asList("null")), "null", "null", true, false);
 		SpringApplication.run(WynnmarketserverApplication.class, args);
 	}
 

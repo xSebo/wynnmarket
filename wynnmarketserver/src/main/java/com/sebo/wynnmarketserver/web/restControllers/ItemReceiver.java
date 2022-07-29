@@ -22,10 +22,10 @@ import java.util.List;
 @RestController
 public class ItemReceiver {
     int secondPage = 0;
-    Thread clickerThread = new Thread(new AutoClicker());
     @PostMapping("/items")
     public void receiveItems(HttpEntity<String> httpEntity) {
         if(secondPage == 1){
+            Thread clickerThread = new Thread(new AutoClicker());
             ItemArray.clear();
             clickerThread.start();
             System.out.println("Working...");
