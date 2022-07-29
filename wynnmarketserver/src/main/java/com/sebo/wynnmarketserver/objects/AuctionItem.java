@@ -50,7 +50,8 @@ public class AuctionItem extends Item{
             "Legendary", "#55FFFF",
             "Rare", "#FF55FF",
             "Unique", "#FFFF55",
-            "Normal","#FFFFFF"
+            "Normal","#FFFFFF",
+            "Set","#55FF55"
             );
     ;
 
