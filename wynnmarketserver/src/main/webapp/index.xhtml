@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/primeflex@3.1.2/primeflex.css"/>
+<link rel="stylesheet" href="/css/index.css"/>
+<script src="/js/index.js" type=""></script>
+
+<h:head>
+    <title>WynnMarket</title>
+</h:head>
+
+<div class="card">
+    <h:form>
+        <p:panel id="panel" header="Search" styleClass="mb-3">
+            <p:growl id="messages"/>
+
+            <h:panelGrid columns="4" cellpadding="7">
+                <h:outputLabel for="itemName" value="Item name:"/>
+                <p:inputText id="itemName" value="#{indexSearch.itemName}" required="true" label="Text 1"
+                             style="width: 12rem">
+                    <f:validateLength minimum="2"/>
+                </p:inputText>
+                <p:message for="itemName"/>
+                <h:outputText value="#{indexSearch.itemName}"/>
+
+                <h:outputLabel for="stats" value="Stats:"/>
+                <p:selectCheckboxMenu id="stats" value="#{indexSearch.stats}" label="Stats" style="min-width: 15rem"
+                                      multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width: 30rem" scrollHeight="250"
+                                      emptyLabel="Please select..." updateLabel="true">
+                    <f:selectItems value="#{indexSearch.getStatNameList()}"/>
+                </p:selectCheckboxMenu>
+
+                <p:selectBooleanCheckbox value="#{indexSearch.avgPct}" itemLabel="Sort by average stat roll"/>
+                <p:selectBooleanCheckbox value="#{indexSearch.avgStatPct}" itemLabel="Sort by specified stat rolls"/>
+
+            </h:panelGrid>
+        </p:panel>
+
+        <p:commandButton action="#{indexSearch.search()}" value="Search"
+                         styleClass="mr-2"/>
+
+    </h:form>
+</div>
+
+<div class="item card">
+    <h:form id="form">
+        <p:dataView id="allItems" var="aItem" value="#{index.items}" rows="12" paginator="true"
+                    paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+                    layout="grid" gridRowStyleClass="lg:col-6 xl:col-4">
+            <p:dataViewGridItem>
+                <div class="aItem-grid-item card border-1">
+                    <div class="aItem-grid-item-top">
+                        <div>
+                            <i class="pi pi-circle-fill aItem-category-icon" style="color:#{aItem.getColour()};"/>
+                            <span class="aItem-category">#{aItem.getName()}</span>
+                            <div class="aItem-name">#{aItem.getRarity()} #{aItem.getType()}</div>
+                            <span class="product-badge status-instock">#{aItem.getFormattedPrice()}</span>
+                            <p:dataTable value="#{aItem.getStats()}" var="stat">
+                                <p:column headerText="Stat">
+                                    <h:outputText value="#{stat.key}"/>
+                                </p:column>
+                                <p:column headerText="Value">
+                                    <h:outputText value="#{stat.value.get(1)}"/>
+                                </p:column>
+                                <p:column headerText="Roll">
+                                    <h:outputText value="#{aItem.getStatPercentages().get(stat.key)}%"/>
+                                </p:column>
+                            </p:dataTable>
+                            <div class="aItem-overallPct">Overall: #{aItem.getAvgStatPct()}%</div>
+
+                            <p></p>
+
+                        </div>
+                    </div>
+                </div>
+            </p:dataViewGridItem>
+        </p:dataView>
+    </h:form>
+</div>
+</html>

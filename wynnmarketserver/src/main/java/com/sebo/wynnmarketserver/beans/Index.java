@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Component("dataGridView")
+@Component("index")
 @ViewScoped
-public class DataGridView implements Serializable {
+public class Index implements Serializable {
 
     private List<AuctionItem> items;
     private AuctionItem selectedItem;
