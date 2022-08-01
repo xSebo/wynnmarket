@@ -6,6 +6,7 @@
       xmlns:p="http://primefaces.org/ui">
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+<link rel="stylesheet" href="https://unpkg.com/primeflex@3.1.2/primeflex.css"/>
 <link rel="stylesheet" href="/css/index.css"/>
 <script src="/js/index.js" type=""></script>
 
@@ -130,7 +131,7 @@
                             <i class="pi pi-circle-fill aItem-category-icon" style="color:#{aItem.getColour()};"/>
                             <span class="aItem-category">#{aItem.getName()}</span>
                             <div class="aItem-name">#{aItem.getRarity()} #{aItem.getType()}</div>
-                            <div class="aItem-price">#{aItem.getPrice()}</div>
+                            <span class="product-badge status-instock">#{aItem.getFormattedPrice()}</span>
                             <p:dataTable value="#{aItem.getStats()}" var="stat">
                                 <p:column headerText="Stat">
                                     <h:outputText value="#{stat.key}" />

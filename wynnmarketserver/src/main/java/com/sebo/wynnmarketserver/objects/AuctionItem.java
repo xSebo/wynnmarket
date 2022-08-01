@@ -44,6 +44,12 @@ public class AuctionItem extends Item{
 
     private transient double avgStatPct;
 
+    public String getFormattedPrice() {
+        return formattedPrice;
+    }
+
+    private transient String formattedPrice = "";
+
     private transient static Map<String,String> rarityColour = Map.of(
             "Mythic", "#AA00AA",
             "Fabled", "#FF5555",
@@ -54,6 +60,19 @@ public class AuctionItem extends Item{
             "Set","#55FF55"
             );
     ;
+
+    private void setFormattedPrice(){
+        int emeraldCost = price;
+        int stx = emeraldCost / 262144;
+        int le = (emeraldCost % 262144) / 4096;
+        int eb = (emeraldCost % 4096) / 64;
+        int e = emeraldCost % 64;
+
+        if (stx !=0) formattedPrice += stx + "STX ";
+        if (le != 0) formattedPrice += le+"LE ";
+        if (eb != 0) formattedPrice += eb+"EB ";
+        if (e != 0) formattedPrice += e+"E ";
+    }
 
     public String getColour() {
         return colour;
@@ -128,6 +147,7 @@ public class AuctionItem extends Item{
         }
         avgStatPct = generateAveragePercentage();
         colour = rarityColour.get(rarity);
+        setFormattedPrice();
         /*
         statPercentages.forEach((k,v) -> {
             System.out.println(k + ": " + v);
