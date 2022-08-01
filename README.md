@@ -18,6 +18,6 @@ Pre-requisites:
 
 6. Open minecraft with the mod installed, and join wynncraft.
 7. Open the auction house, click next page once and then do not move your mouse. Once all pages have been scrolled through, the mouse will stop clicking.
-9. You can now stop the server and close minecraft, as the process is complete. Currently, the server must be restarted whenever you wish to read items again, but minecraft can remain running.
+9. Navigate to localhost:8080/ to view all of the items pulled from the auction house
 
 Enjoy
