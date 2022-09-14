@@ -17,20 +17,34 @@
 </h:head>
 
 <div class="card">
-    <h:form>
+    <h:form id="search">
         <p:panel id="panel" header="Search" styleClass="mb-3">
-            <p:growl id="messages"/>
-
-            <h:panelGrid columns="4" cellpadding="7">
+            <h:panelGrid columns="1" cellpadding="7">
                 <h:outputLabel for="itemName" value="Item name:"/>
-                <p:inputText id="itemName" value="#{indexSearch.itemName}" required="true" label="Text 1"
+                <p:inputText id="itemName" value="#{indexSearch.itemName}" label="Text 1"
                              style="width: 12rem">
-                    <f:validateLength minimum="2"/>
                 </p:inputText>
                 <p:message for="itemName"/>
                 <h:outputText value="#{indexSearch.itemName}"/>
 
-                <h:outputLabel for="stats" value="Stats:"/>
+                <h:outputLabel for="itemName" value="Category:"/>
+                <p:selectOneMenu id="catgs" value="#{indexSearch.selectedCategory}" required="true" label="Category" style="width: 12rem"
+                    valueChangeListener="#{indexSearch.setTypes}" onchange="submit()">
+                    <c:forEach items="#{indexSearch.categories}" var="category">
+                        <f:selectItem itemLabel="#{category}" itemValue="#{category}"/>
+                    </c:forEach>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+
+                <h:outputLabel for="itemName" value="Type:"/>
+                <p:selectOneMenu id="types" value="#{indexSearch.selectedType}" required="true" label="Type" style="width: 12rem">
+                    <c:forEach items="#{indexSearch.getTypes()}" var="type">
+                        <f:selectItem itemLabel="#{type}" itemValue="#{type}"/>
+                    </c:forEach>
+                </p:selectOneMenu>
+                <p:message for="@previous"/>
+
+                <h:outputLabel for="itemName" value="Stat:"/>
                 <p:selectCheckboxMenu id="stats" value="#{indexSearch.stats}" label="Stats" style="min-width: 15rem"
                                       multiple="true" filter="true" filterMatchMode="startsWith" panelStyle="width: 30rem" scrollHeight="250"
                                       emptyLabel="Please select..." updateLabel="true">

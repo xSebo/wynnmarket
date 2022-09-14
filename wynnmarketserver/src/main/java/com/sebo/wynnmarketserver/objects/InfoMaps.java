@@ -1,10 +1,9 @@
 package com.sebo.wynnmarketserver.objects;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
-public class StatMap {
-    public static Map<String, String> map = new HashMap<>(){
+public class InfoMaps {
+    public static Map<String, String> statMap = new HashMap<>(){
         {
             put("Strength", "strengthPoints");
             put("Dexterity", "dexterityPoints");
@@ -58,4 +57,22 @@ public class StatMap {
         }
 
     };
+
+    public static Map<String, List<String>> categoryMap = new HashMap<>(){
+        {
+            put("Any", Arrays.asList("Any","Dagger","Wand","Spear","Bow","Relik","Helmet","Chestplate","Leggings","Boots","Ring","Necklace","Bracelet"));
+            put("Weapon", Arrays.asList("Dagger","Wand","Spear","Bow","Relik"));
+            put("Armor", Arrays.asList("Helmet","Chestplate","Leggings","Boots"));
+            put("Accessory", Arrays.asList("Ring","Necklace","Bracelet"));
+        }
+    };
+
+    public static List<String> getOrderedCategories(){
+        List categories = new ArrayList();
+        categories.add("Any");
+        categories.add("Weapon");
+        categories.add("Armor");
+        categories.add("Accessory");
+        return categories;
+    }
 }

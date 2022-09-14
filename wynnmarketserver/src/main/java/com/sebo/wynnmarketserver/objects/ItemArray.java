@@ -74,7 +74,7 @@ public class ItemArray {
                     ItemArray.add(item);
                 }
             }
-            ItemArray.sortBy("null",new ArrayList<>(Arrays.asList("null")), "null", "null", true, false);
+            ItemArray.sortBy("",new ArrayList<>(Arrays.asList("null")), "Any", "Any", true, false);
             return "HashMap for auction items updated with " + auctionItems.size() + " items";
         } catch (IOException e) {
             return "No pre-existing items found";
@@ -160,13 +160,13 @@ public class ItemArray {
             nullStat = stat.get(0).equalsIgnoreCase("null");
         }catch(NullPointerException e){
         }
-        if (category.equalsIgnoreCase("null")) {
+        if (category.equalsIgnoreCase("Any")) {
             nullCat = true;
         }
-        if (type.equalsIgnoreCase("null")) {
+        if (type.equalsIgnoreCase("Any")) {
             nullType = true;
         }
-        if (name.equalsIgnoreCase("null")) {
+        if (name.equalsIgnoreCase("")) {
             nullName = true;
         }
 

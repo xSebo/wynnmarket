@@ -127,8 +127,8 @@ public class AuctionItem extends Item{
     }
 
     public AuctionItem(JSONObject o) throws JSONException {
+        super(o.getString("name"),o.getString("category"),o.getString("type"),new HashMap<>());
         statPercentages = new HashMap<>();
-        name = o.get("name").toString();
         rarity = (String) o.get("rarity");
         price = Integer.valueOf(o.get("price").toString());
         try {

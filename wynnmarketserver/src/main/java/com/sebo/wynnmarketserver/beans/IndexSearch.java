@@ -1,36 +1,51 @@
 package com.sebo.wynnmarketserver.beans;
 
 import com.sebo.wynnmarketserver.objects.ItemArray;
-import com.sebo.wynnmarketserver.objects.StatMap;
+import com.sebo.wynnmarketserver.objects.InfoMaps;
 import org.primefaces.PrimeFaces;
-import org.primefaces.component.datatable.DataTable;
 import org.primefaces.component.dataview.DataView;
+import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.springframework.stereotype.Component;
 
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.lang.reflect.Array;
+import javax.faces.event.ValueChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 
 @Component("indexSearch")
 @RequestScoped
 public class IndexSearch {
 
+    public String getSelectedType() {
+        return selectedType;
+    }
+
+    public void setSelectedType(String selectedType) {
+        this.selectedType = selectedType;
+    }
+
+    public String getSelectedCategory() {
+        return selectedCategory;
+    }
+
+    public void setSelectedCategory(String selectedCategory) {
+        this.selectedCategory = selectedCategory;
+    }
+
+    private String selectedType;
+    private String selectedCategory;
+
     private String itemName;
 
     public List<String> getStatNameList() {
-        List<String> statList = new ArrayList<>(StatMap.map.keySet());
+        List<String> statList = new ArrayList<>(InfoMaps.statMap.keySet());
         statList.sort(String::compareToIgnoreCase);
         return statList;
     }
 
     public String getStatId(String statName){
-        return StatMap.map.get(statName);
+        return InfoMaps.statMap.get(statName);
     }
 
     public ArrayList<String> getStats() {
@@ -42,6 +57,27 @@ public class IndexSearch {
     }
 
     private ArrayList<String> stats;
+
+    private List<String> categories = InfoMaps.getOrderedCategories();
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    private List<String> types = InfoMaps.categoryMap.get(categories.get(0));
+
+    public void setTypes(ValueChangeEvent event) {
+        String category = (String) event.getNewValue();
+        types = new ArrayList<>(InfoMaps.categoryMap.get(category));
+
+        SelectOneMenu selectOneMenu = (SelectOneMenu) FacesContext.getCurrentInstance().getViewRoot().findComponent("search")
+                .getChildren().get(0).getChildren().get(0).findComponent("types");
+        PrimeFaces.current().ajax().update(selectOneMenu);
+    }
+
+    public List<String> getTypes() {
+        return types;
+    }
 
     private boolean avgPct;
 
@@ -83,8 +119,7 @@ public class IndexSearch {
         if(statSubmission.size() == 0){
             statSubmission.add("null");
         }
-
-        ItemArray.sortBy(itemName, statSubmission, "null","null", avgPct, avgStatPct);
+        ItemArray.sortBy(itemName, statSubmission, selectedCategory, selectedType, avgPct, avgStatPct);
 
         DataView dataView = (DataView) FacesContext.getCurrentInstance().getViewRoot().findComponent("form").findComponent("allItems");
         PrimeFaces.current().ajax().update(dataView);

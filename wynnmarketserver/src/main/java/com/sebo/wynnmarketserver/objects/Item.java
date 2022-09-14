@@ -42,4 +42,11 @@ public class Item {
     public HashMap<String, ArrayList<Double>> getStats() {
         return stats;
     }
+
+    public Item(String name, String category, String type, HashMap<String, ArrayList<Double>> stats) {
+        this.name = name;
+        this.category = category;
+        this.type = type;
+        this.stats = stats;
+    }
 }
