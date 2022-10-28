@@ -37,10 +37,10 @@ public class AllItemArray {
                     put("Intelligence", "intelligencePoints");
                     put("Agility", "agilityPoints");
                     put("Defense", "defensePoints");
-                    put("Main Attack Damage", "damageBonus");
-                    put(".+\\s+Main Attack Damage", "damageBonusRaw");
-                    put(".+\\s+Spell Damage", "spellBonusRaw");
-                    put("Spell Damage", "spellBonus");
+                    put("Main Attack Damage", "mainAttackDamageBonus");
+                    put(".+\\s+Main Attack Damage", "mainAttackDamageBonusRaw");
+                    put(".+\\s+Spell Damage", "spellDamageBonusRaw");
+                    put("Spell Damage", "spellDamageBonus");
                     put("Health Regen", "healthRegenRaw");
                     put("Health", "healthBonus");
                     put("Poison", "poison");
@@ -66,11 +66,11 @@ public class AllItemArray {
                     put("Stealing", "emeraldStealing");
                     put("Gather XP Bonus", "gatherXpBonus");
                     put("Gather Speed", "gatherSpeed");
-                    put(".+\\s+Earth Damage", "bonusEarthDamage");
-                    put(".+\\s+Fire Damage", "bonusFireDamage");
-                    put(".+\\s+Water Damage", "bonusWaterDamage");
-                    put(".+\\s+Air Damage", "bonusAirDamage");
-                    put(".+\\s+Thunder Damage", "bonusThunderDamage");
+                    put(".+\\s+Earth Damage", "earthDamageBonus");
+                    put(".+\\s+Fire Damage", "fireDamageBonus");
+                    put(".+\\s+Water Damage", "waterDamageBonus");
+                    put(".+\\s+Air Damage", "airDamageBonus");
+                    put(".+\\s+Thunder Damage", "thunderDamageBonus");
                     put(".+\\s+Earth Defense", "bonusEarthDefense");
                     put(".+\\s+Fire Defense", "bonusFireDefense");
                     put(".+\\s+Water Defense", "bonusWaterDefense");
@@ -131,6 +131,7 @@ public class AllItemArray {
                         String name = "";
                         String type = "";
                         String category = "";
+                        String rarity = "";
                         HashMap<String, ArrayList<Double>> stats = new HashMap<>();
                         JSONObject o = json.getJSONObject(j);
                         String newJson = "{\"name\":\"\",\"category\":\"\",\"type\":\"\"}";
@@ -138,23 +139,27 @@ public class AllItemArray {
                             name = o.getString("displayName");
                             type = o.getString("type");
                             category = o.getString("category");
+                            rarity = o.getString("tier");
                         } catch (JSONException e) {
                             try {
                                 if (e.getMessage().equalsIgnoreCase("JSONObject[\"displayName\"] not found.")) {
                                     name = o.getString("name");
                                     type = o.getString("type");
                                     category = o.getString("category");
+                                    rarity = o.getString("tier");
                                 }
                             } catch (JSONException e1) {
                                 try {
                                     name = o.getString("displayName");
                                     type = o.getString("accessoryType");
                                     category = o.getString("category");
+                                    rarity = o.getString("tier");
                                 } catch (JSONException e2) {
                                     try {
                                         name = o.getString("name");
                                         type = o.getString("accessoryType");
                                         category = o.getString("category");
+                                        rarity = o.getString("tier");
 
                                     } catch (JSONException ex) {
                                         System.out.println(o);
@@ -204,11 +209,9 @@ public class AllItemArray {
                         if (!(name.equalsIgnoreCase("") ||
                                 type.equalsIgnoreCase("") ||
                                 category.equalsIgnoreCase(""))) {
-                            AllItemArray.addItem(name, new Item(name, category, type, stats));
+                            AllItemArray.addItem(name, new Item(name, rarity, category, type, stats));
                         }
                     }
-                    System.out.println(AllItemArray.allItems.get("Suchimu").getStats());
-
 
                 } else {
                     System.out.println("Failed : HTTP error code : " + responseCode);

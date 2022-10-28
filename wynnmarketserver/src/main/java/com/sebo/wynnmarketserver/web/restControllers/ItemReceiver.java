@@ -37,7 +37,7 @@ public class ItemReceiver {
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
-        String bannedJson = "{\"stats\":{},\"price\":\"0\",\"name\":\"\",\"rarity\":\"null\"}";
+        String bannedJson = "{\"stats\":{},\"price\":\"0\",\"name\":\"\"}";
         //System.out.println(oT.toString() + "\n" + bannedJson);
         if(oT.toString().equalsIgnoreCase(bannedJson)){
             MultithreadVariables.clickMouse.getAndSet(false);
@@ -51,6 +51,9 @@ public class ItemReceiver {
         try {
             o = new JSONArray(httpEntity.getBody());
             for (int i = 0; i < o.length(); i++) {
+                if(o.getJSONObject(i).getString("name").equalsIgnoreCase("epoch")){
+                    System.out.println(o.getJSONObject(i).toString());
+                }
                 AuctionItem item = new AuctionItem(o.getJSONObject(i));
                 ItemArray.add(item);
             }

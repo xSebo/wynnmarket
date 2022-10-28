@@ -31,10 +31,10 @@ public class Item {
                     put("\\d+\\s+Intelligence", "intelligencePoints");
                     put("\\d+\\s+Agility", "agilityPoints");
                     put("\\d+\\s+Defence", "defensePoints");
-                    put("\\d+\\s+Main Attack Neutral Damage", "damageBonusRaw");
-                    put("\\d%+\\s+Main Attack Damage", "damageBonus");
-                    put("\\d+\\s+Neutral Spell Damage", "spellBonusRaw");
-                    put("\\d%+\\s+Spell Damage", "spellBonus");
+                    put("\\d+\\s+Main Attack Damage", "mainAttackDamageBonusRaw");
+                    put("\\d%+\\s+Main Attack Damage", "mainAttackDamageBonus");
+                    put("\\d+\\s+Neutral Spell Damage", "spellDamageBonusRaw");
+                    put("\\d%+\\s+Spell Damage", "spellDamageBonus");
                     put("\\/3s Poison", "poison");
                     put("\\/3s Life Steal", "lifeSteal");
                     put("\\/5s Mana Regen", "manaRegen");
@@ -60,11 +60,11 @@ public class Item {
                     put("\\d%+\\s+Stealing", "emeraldStealing");
                     put("\\d%+\\s+Gather XP Bonus", "gatherXpBonus");
                     put("\\d%+\\s+Gather Speed", "gatherSpeed");
-                    put("\\d%+\\s+Earth Damage", "bonusEarthDamage");
-                    put("\\d%+\\s+Fire Damage", "bonusFireDamage");
-                    put("\\d%+\\s+Water Damage", "bonusWaterDamage");
-                    put("\\d%+\\s+Air Damage", "bonusAirDamage");
-                    put("\\d%+\\s+Thunder Damage", "bonusThunderDamage");
+                    put("\\d%+\\s+Earth Damage", "earthDamageBonus");
+                    put("\\d%+\\s+Fire Damage", "fireDamageBonus");
+                    put("\\d%+\\s+Water Damage", "waterDamageBonus");
+                    put("\\d%+\\s+Air Damage", "airDamageBonus");
+                    put("\\d%+\\s+Thunder Damage", "thunderDamageBonus");
                     put("\\d%+\\s+Earth Defence", "bonusEarthDefense");
                     put("\\d%+\\s+Fire Defence", "bonusFireDefense");
                     put("\\d%+\\s+Water Defence", "bonusWaterDefense");
@@ -77,16 +77,12 @@ public class Item {
         return name;
     }
 
-    public String getRarity() {
-        return rarity;
-    }
 
     public HashMap<String, Double[]> getStats() {
         return stats;
     }
 
     private String name;
-    private String rarity;
 
     private int price;
 
@@ -150,31 +146,9 @@ public class Item {
                         String loreLine = StringUtils.stripControlCodes(lore.getStringTagAt(i));
                         loreLine = loreLine.replaceAll("\\*", "");
                         switch (loreLine.toLowerCase()) {
-                            case "set item":
-                                rarity = "Set";
-                                break;
-                            case "unique item":
-                                rarity = "Unique";
-                                break;
-                            case "rare item":
-                                rarity = "Rare";
-                                break;
-                            case "legendary item":
-                                rarity = "Legendary";
-                                break;
-                            case "fabled item":
-                                rarity = "Fabled";
-                                break;
-                            case "mythic item":
-                                rarity = "Mythic";
-                                break;
-
                             case "crafting":
                                 isUseful = false;
                                 break;
-                        }
-                        if (loreLine.toLowerCase().contains("crafted by")) {
-                            rarity = "Crafted";
                         }
 
                         if (loreLine.equalsIgnoreCase("Price:")) {

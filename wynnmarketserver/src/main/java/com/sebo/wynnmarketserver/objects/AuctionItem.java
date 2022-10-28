@@ -19,10 +19,6 @@ public class AuctionItem extends Item{
         return avgStatPct;
     }
 
-    public String getRarity() {
-        return rarity;
-    }
-
     public int getPrice() {
         return price;
     }
@@ -98,8 +94,11 @@ public class AuctionItem extends Item{
                 if (name.equalsIgnoreCase("Broken Balance")) {
                     statBounds.set(1, Double.valueOf(124));
                 }
-
-                percentage = ((statVal - statBounds.get(0)) / (statBounds.get(1) - statBounds.get(0))) * 100;
+                if(statVal == statBounds.get(0) && statVal == statBounds.get(1)){
+                    percentage = 100;
+                }else {
+                    percentage = ((statVal - statBounds.get(0)) / (statBounds.get(1) - statBounds.get(0))) * 100;
+                }
                 percentage = Double.valueOf(df.format(percentage));
                 statPercentages.put(stat,percentage);
                 return percentage;
@@ -109,9 +108,6 @@ public class AuctionItem extends Item{
             return 0;
         }
     }
-
-    private String rarity;
-
 
     private int price;
 
@@ -127,16 +123,18 @@ public class AuctionItem extends Item{
     }
 
     public AuctionItem(JSONObject o) throws JSONException {
-        super(o.getString("name"),o.getString("category"),o.getString("type"),new HashMap<>());
+        super(o.getString("name"),"","","",new HashMap<>());
         statPercentages = new HashMap<>();
-        rarity = (String) o.get("rarity");
+
         price = Integer.valueOf(o.get("price").toString());
         try {
             category = AllItemArray.allItems.get(name).getCategory();
             type = AllItemArray.allItems.get(name).getType();
+            rarity = AllItemArray.allItems.get(name).getRarity();
         }catch (Exception e){
             category = "Unknown";
             type = "Unknown";
+            rarity = "Unknown";
         }
         stats = new Gson().fromJson(o.getString("stats"), HashMap.class);
         try{

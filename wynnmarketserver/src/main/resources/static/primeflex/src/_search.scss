@@ -1,0 +1,176 @@
+.tree-badge {
+    border-radius: 2px;
+    padding: .25em .5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+
+    &.status-instock {
+        background: #C8E6C9;
+        color: #256029;
+    }
+    
+    &.status-outofstock {
+        background: #FFCDD2;
+        color: #C63737;
+    }
+    
+    &.status-lowstock {
+        background: #FEEDAF;
+        color: #8A5340;
+    }
+}
+
+.tree {
+    .tree-description {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+
+    .tree-height {
+        margin: 0 0 1rem 0;
+    }
+
+	.tree-material {
+		margin: 0 0 1rem 0;
+	}
+
+    .tree-type-icon {
+        vertical-align: middle;
+        margin-right: .5rem;
+    }
+
+    .tree-type {
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+    .tree-list-item {
+        @include flex();
+        @include flex-align-center();
+        padding: 1rem;
+
+        &.border-1 {
+            border-bottom: 1px solid var(--surface-d);
+        }
+
+        img {
+            width: 150px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            margin-right: 2rem;
+        }
+
+        .tree-list-detail {
+            flex: 1 1 0;
+            -ms-flex: 1 1 0;
+        }
+
+        .ui-rating {
+            margin: 0 0 .5rem 0;
+        }
+
+        .tree-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: .5rem;
+            align-self: flex-end;
+        }
+
+		.tree-deposit{
+			font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: .5rem;
+            align-self: flex-end;
+		}
+
+        .tree-list-action {
+            @include flex();
+            @include flex-direction-column();
+        }
+
+        .ui-button {
+            margin-bottom: .5rem;
+        }
+    }
+
+    .tree-grid-item {
+        &.border-1 {
+            border: 1px solid var(--surface-d);
+        }
+
+        .tree-grid-item-top,
+        .tree-grid-item-bottom {
+            @include flex();
+            @include flex-align-center();
+            @include flex-justify-between();
+        }
+
+        img {
+            width: 75%;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            margin: 2rem 0;
+        }
+
+        .ui-rating {
+            margin: 0 0 1rem 0;
+        }
+
+        .tree-grid-item-content {
+            text-align: center;
+        }
+
+        .tree-price {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .tree {
+        .tree-list-item {
+            @include flex-direction-column();
+            @include flex-align-center();
+
+            img {
+                width: 75%;
+                margin: 2rem 0;
+            }
+
+            .tree-list-detail {
+                text-align: center;
+            }
+
+            .tree-price {
+                align-self: center;
+            }
+
+            .tree-list-action {
+                @include flex();
+                @include flex-direction-column();
+            }
+
+            .tree-list-action {
+                margin-top: 2rem;
+                @include flex-direction-row();
+                @include flex-justify-between();
+                @include flex-align-center();
+                width: 100%;
+            }
+        }
+    }
+}
+.card {
+        background: #002C3E;
+        padding: 2rem;
+        box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+        border-radius: 4px;
+        margin-bottom: 2rem;
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+    }

@@ -27,6 +27,12 @@ public class Item {
 
     protected String type;
 
+    public String getRarity() {
+        return rarity;
+    }
+
+    protected String rarity;
+
     protected HashMap<String,ArrayList<Double>> stats;
 
     public ArrayList<Double> getStat(String stat){
@@ -43,10 +49,14 @@ public class Item {
         return stats;
     }
 
-    public Item(String name, String category, String type, HashMap<String, ArrayList<Double>> stats) {
+    public Item(String name, String rarity, String category, String type, HashMap<String, ArrayList<Double>> stats) {
         this.name = name;
+        this.rarity = rarity;
         this.category = category;
         this.type = type;
         this.stats = stats;
+    }
+
+    public void setType(String type) {
     }
 }

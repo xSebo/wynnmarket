@@ -22,7 +22,6 @@ public class HttpItemHandler extends Thread{
         String finalJson = "[";
         for(Item i:localItems) {
             String jsonMap = "{\"name\":\""+i.getName()+
-                            "\",\"rarity\":\""+i.getRarity()+
                             "\",\"price\":\""+i.getPrice()+
                             "\",\"stats\":" +
                     new Gson().toJson(i.getStats()) + "}"; // {"statName":value}

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Stream;
 
 public class ItemArray {
     private static ArrayList<AuctionItem> auctionItems = new ArrayList<>();
@@ -25,7 +26,7 @@ public class ItemArray {
         writer.print("");
         writer.println("[");
         for (int i = 0; i < auctionItems.size(); i++) {
-            String bannedJson = "{\"name\":\"\",\"rarity\":\"null\",\"price\":\"0\",\"category\":\"Unknown\",\"type\":\"Unknown\",\"stats\":{}}";
+            String bannedJson = "{\"name\":\"\",\"price\":\"0\",\"category\":\"Unknown\",\"type\":\"Unknown\",\"stats\":{}}";
             if (auctionItems.get(i).genRawJson().equals(bannedJson)) {
                 continue;
             }
@@ -67,10 +68,16 @@ public class ItemArray {
             for (int i = 0; i < a.length(); i++) {
                 AuctionItem item = new AuctionItem(a.getJSONObject(i));
                 if(item.getStats().size() != 0){
+                    String type = item.getType();
 //TODO -> THIS THROWS AWAY DATA, NEED TO FIX
-                    if(item.getType().equalsIgnoreCase("Unknown")){
-                        continue;
+                    if(type.equalsIgnoreCase("Unknown")){
+                        try{
+                            type = AllItemArray.allItems.get(item.getName()).getType();
+                        }catch (NullPointerException e){
+                            continue;
+                        }
                     }
+                    item.setType(type);
                     ItemArray.add(item);
                 }
             }
@@ -86,38 +93,59 @@ public class ItemArray {
 
     private static ArrayList<AuctionItem> sortByStats(ArrayList<AuctionItem> items,ArrayList<String> stat, boolean pct){
         Map<AuctionItem,ArrayList<Double>> allIndeces = new HashMap<>();
-        for(String statI:stat){
-            Collections.sort(items, new Comparator<>() {
-                @Override
-                public int compare(AuctionItem o1, AuctionItem o2) {
-                    double stat1 = 0;
-                    double stat2 = 0;
-
-                    try {
-                        if(!pct) {
-                            stat1 = o1.getStat(statI).get(1);
-                        }else{
-                            stat1 = o1.getStatPct(statI);
-                        }
-                    } catch (NullPointerException e) {
-                    }
-                    try {
-                        if(!pct) {
-                            stat2 = o2.getStat(statI).get(1);
-                        }else{
-                            stat2 = o2.getStatPct(statI);
-                        }
-                    } catch (NullPointerException e) {
-                    }
-                    return Double.compare(stat2, stat1);
+        if(stat.size() > 1){
+            HashMap<AuctionItem,Double> multiStat = new HashMap<>();
+            for(AuctionItem item : items){
+                double total = 0;
+                for(String statI:stat){
+                    total += item.getStatPct(statI);
                 }
-            });
-            for(int j = 0; j<items.size(); j++){
-                Double doubleJ = Double.valueOf(j);
-                try{
-                    allIndeces.get(items.get(j)).add(doubleJ);
-                }catch(NullPointerException e){
-                    allIndeces.put(items.get(j),new ArrayList<>(Arrays.asList(doubleJ)));
+                total /= stat.size();
+                multiStat.put(item,total);
+
+            }
+
+            List<Map.Entry<AuctionItem, Double>> list = new ArrayList<>(multiStat.entrySet());
+            list.sort(Map.Entry.comparingByValue());
+            items.clear();
+            for (Map.Entry<AuctionItem, Double> entry : list) {
+                items.add(entry.getKey());
+            }
+            Collections.reverse(items);
+        }else{
+            for(String statI:stat){
+                Collections.sort(items, new Comparator<>() {
+                    @Override
+                    public int compare(AuctionItem o1, AuctionItem o2) {
+                        double stat1 = 0;
+                        double stat2 = 0;
+
+                        try {
+                            if(!pct) {
+                                stat1 = o1.getStat(statI).get(1);
+                            }else{
+                                stat1 = o1.getStatPct(statI);
+                            }
+                        } catch (NullPointerException e) {
+                        }
+                        try {
+                            if(!pct) {
+                                stat2 = o2.getStat(statI).get(1);
+                            }else{
+                                stat2 = o2.getStatPct(statI);
+                            }
+                        } catch (NullPointerException e) {
+                        }
+                        return Double.compare(stat2, stat1);
+                    }
+                });
+                for(int j = 0; j<items.size(); j++){
+                    Double doubleJ = Double.valueOf(j);
+                    try{
+                        allIndeces.get(items.get(j)).add(doubleJ);
+                    }catch(NullPointerException e){
+                        allIndeces.put(items.get(j),new ArrayList<>(Arrays.asList(doubleJ)));
+                    }
                 }
             }
         }
@@ -184,6 +212,7 @@ public class ItemArray {
                     || i.getName().contains("Unidentified")) {
                 continue;
             }
+
             if ((i.getCategory().equalsIgnoreCase(category) && i.getType().equalsIgnoreCase(type) && i.getName().equalsIgnoreCase(name))) {
                 if(stat.size() != 0 && !nullStat){
                     List<String> containedStats = new ArrayList<>();
