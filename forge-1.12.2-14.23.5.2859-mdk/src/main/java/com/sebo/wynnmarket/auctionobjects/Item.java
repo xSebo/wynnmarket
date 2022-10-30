@@ -26,11 +26,11 @@ public class Item {
             new HashMap<String, String>() {
                 {
                     put("Health: ", "health"); //Applicable to armour, top health value
-                    put("\\d+\\s+Strength", "strengthPoints");
-                    put("\\d+\\s+Dexterity", "dexterityPoints");
-                    put("\\d+\\s+Intelligence", "intelligencePoints");
-                    put("\\d+\\s+Agility", "agilityPoints");
-                    put("\\d+\\s+Defence", "defensePoints");
+//                    put("\\d+\\s+Strength", "strengthPoints");
+//                    put("\\d+\\s+Dexterity", "dexterityPoints");
+//                    put("\\d+\\s+Intelligence", "intelligencePoints");
+//                    put("\\d+\\s+Agility", "agilityPoints");
+//                    put("\\d+\\s+Defence", "defensePoints");
                     put("\\d+\\s+Main Attack Damage", "mainAttackDamageBonusRaw");
                     put("\\d%+\\s+Main Attack Damage", "mainAttackDamageBonus");
                     put("\\d+\\s+Neutral Spell Damage", "spellDamageBonusRaw");
