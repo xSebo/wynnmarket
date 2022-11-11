@@ -51,7 +51,7 @@ public class ItemReceiver {
         try {
             o = new JSONArray(httpEntity.getBody());
             for (int i = 0; i < o.length(); i++) {
-                if(o.getJSONObject(i).getString("name").equalsIgnoreCase("epoch")){
+                if(o.getJSONObject(i).getString("name").equalsIgnoreCase("freedom")){
                     System.out.println(o.getJSONObject(i).toString());
                 }
                 AuctionItem item = new AuctionItem(o.getJSONObject(i));

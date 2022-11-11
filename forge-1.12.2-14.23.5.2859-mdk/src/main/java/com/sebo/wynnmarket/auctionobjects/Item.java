@@ -33,7 +33,7 @@ public class Item {
 //                    put("\\d+\\s+Defence", "defensePoints");
                     put("\\d+\\s+Main Attack Damage", "mainAttackDamageBonusRaw");
                     put("\\d%+\\s+Main Attack Damage", "mainAttackDamageBonus");
-                    put("\\d+\\s+Neutral Spell Damage", "spellDamageBonusRaw");
+                    put("\\d+\\s+Spell Damage", "spellDamageBonusRaw");
                     put("\\d%+\\s+Spell Damage", "spellDamageBonus");
                     put("\\/3s Poison", "poison");
                     put("\\/3s Life Steal", "lifeSteal");
