@@ -41,7 +41,8 @@ public class AllItemArray {
                     put(".+\\s+Main Attack Damage", "mainAttackDamageBonusRaw");
                     put(".+\\s+Spell Damage", "spellDamageBonusRaw");
                     put("Spell Damage", "spellDamageBonus");
-                    put("Health Regen", "healthRegenRaw");
+                    put("Health Regen Raw", "healthRegenRaw");
+                    put("Health Regen", "healthRegen");
                     put("Health", "healthBonus");
                     put("Poison", "poison");
                     put("Life Steal", "lifeSteal");

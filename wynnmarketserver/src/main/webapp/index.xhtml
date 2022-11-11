@@ -73,7 +73,7 @@
                     <div class="aItem-grid-item-top">
                         <div>
                             <i class="pi pi-circle-fill aItem-category-icon" style="color:#{aItem.getColour()};"/>
-                            <span class="aItem-category">#{aItem.getName()}</span>
+                            <a href="#{aItem.url}" class="aItem-category">#{aItem.getName()}</a>
                             <div class="aItem-name">#{aItem.getRarity()} #{aItem.getType()}</div>
                             <span class="product-badge status-instock">#{aItem.getFormattedPrice()}</span>
                             <p:dataTable value="#{aItem.getStats()}" var="stat">

@@ -2,6 +2,9 @@ package com.sebo.wynnmarketserver.objects;
 
 import lombok.Getter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +12,12 @@ import java.util.List;
 
 @Getter
 public class Item {
+
+    public String getUrl() {
+        return url;
+    }
+
+    protected String url;
     public String getName() {
         return name;
     }
@@ -55,6 +64,8 @@ public class Item {
         this.category = category;
         this.type = type;
         this.stats = stats;
+
+        this.url = "https://hppeng-wynn.github.io/item/#" + name;
     }
 
     public void setType(String type) {

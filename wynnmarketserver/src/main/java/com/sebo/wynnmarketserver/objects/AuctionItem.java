@@ -13,6 +13,10 @@ import java.util.Map;
 
 public class AuctionItem extends Item{
 
+    public String getUrl(){
+        return url;
+    }
+
     private static final DecimalFormat df = new DecimalFormat("0.00");
 
     public double getAvgStatPct() {
