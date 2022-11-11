@@ -176,7 +176,7 @@ public class ItemArray {
                 continue;
             }
 
-            if ((i.getCategory().equalsIgnoreCase(category) && i.getType().equalsIgnoreCase(type) && i.getName().equalsIgnoreCase(name))) {
+            if ((i.getCategory().equalsIgnoreCase(category) && i.getType().equalsIgnoreCase(type) && i.getName().toLowerCase().contains(name.toLowerCase()))) {
                 if (stat.size() != 0 && !nullStat) {
                     List<String> containedStats = new ArrayList<>();
                     for (String s : stat) {
